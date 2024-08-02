@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,16 +10,20 @@ using Wallaboo.Interfaces;
 
 namespace Wallabo.Entities
 {
-    public class Cliente:IEntidadTenant
+    public class Usuario:IdentityUser,IEntidadTenant
     {
-        public int Id { get; set; }
+
+        //public int Id { get; set; }
         public string NombreComercial { get; set; } = null!;
         public string DireccionComercial { get; set;} = null!;
         public string TelefonoComercial { get; set;} = null!;
         public string? URLComercial { set; get; }
         public string DescripcionComercial { set; get; } = null!;
         public string TenantId { get; set; } = null!;
-        public List<Anuncio> Anuncios { get; set; } = null!;
+        public int PaisId {  get; set; }
+        public int ProvinciaId {  get; set; }
+        public int CiudadId {  get; set; }
+        //public List<Anuncio> Anuncios { get; set; } = null!;
         
     }
 }

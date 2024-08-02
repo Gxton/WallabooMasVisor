@@ -13,8 +13,6 @@ namespace Wallaboo.Entities
     {
         public int Id {  get; set; }
         public string Descripcion { get; set; } = null!;
-        public int ClienteId {  get; set; }
         public string TenantId { get; set; } = null!;
-        public Cliente Cliente { get; set; }=null!;
     }
 }

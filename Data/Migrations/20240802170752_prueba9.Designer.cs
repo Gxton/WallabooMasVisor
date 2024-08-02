@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240802170752_prueba9")]
+    partial class prueba9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,8 +276,6 @@ namespace Wallaboo.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProvinciaId");
-
                     b.ToTable("Ciudades");
 
                     b.HasData(
@@ -344,9 +345,6 @@ namespace Wallaboo.Data.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int>("CiudadId")
-                        .HasColumnType("int");
-
                     b.Property<string>("DescripcionComercial")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -358,12 +356,6 @@ namespace Wallaboo.Data.Migrations
                     b.Property<string>("NombreComercial")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaisId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProvinciaId")
-                        .HasColumnType("int");
 
                     b.Property<string>("TelefonoComercial")
                         .IsRequired()
@@ -430,17 +422,6 @@ namespace Wallaboo.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Wallaboo.Entities.Ciudad", b =>
-                {
-                    b.HasOne("Wallaboo.Entities.Provincia", "Provincia")
-                        .WithMany()
-                        .HasForeignKey("ProvinciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Provincia");
                 });
 
             modelBuilder.Entity("Wallaboo.Entities.Provincia", b =>

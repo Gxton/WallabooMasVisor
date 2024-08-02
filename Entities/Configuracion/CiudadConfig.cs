@@ -7,10 +7,7 @@ namespace Wallaboo.Entities.Configs
     {
         public void Configure(EntityTypeBuilder<Ciudad> builder)
         {
-            //builder.ToTable("tblCiudad");
             builder.HasKey(ciudad => ciudad.Id);
-
-            //builder.HasOne(ciudad => ciudad.Provincia);
         }
     }
 }

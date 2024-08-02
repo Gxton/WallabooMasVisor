@@ -1,0 +1,1 @@
+Modificar RegistroViewModel para agregar los datos nuevos de la tabla ASPNetUser

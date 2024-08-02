@@ -29,7 +29,7 @@ namespace Wallaboo.Controllers
             {
                 return View(modelo);
             }
-
+            
             var usuario = new IdentityUser() { Email = modelo.Email, UserName = modelo.Email };
 
             var resultado = await _userManager.CreateAsync(usuario, password: modelo.Password);

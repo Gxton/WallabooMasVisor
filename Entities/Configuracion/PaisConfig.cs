@@ -7,11 +7,8 @@ namespace Wallaboo.Entities.Configs
     {
         public void Configure(EntityTypeBuilder<Pais> builder)
         {
-          //  builder.ToTable("tblPais");
             builder.HasKey(pais => pais.id);
 
-          //  builder.HasMany(pais => pais.Provincias)
-            //    .WithOne(provincia => provincia.Pais);
         }
     }
 }

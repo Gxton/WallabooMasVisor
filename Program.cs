@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Wallabo.Entities;
 using Wallaboo.Data;
 using Wallaboo.Services;
 
@@ -15,7 +16,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-
+//builder.Services.AddDefaultIdentity<Usuario>();
 //Servicios
 builder.Services.AddTransient<IServiceTenant, ServiceTenant>();
 

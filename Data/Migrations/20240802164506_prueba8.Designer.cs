@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240802164506_prueba8")]
+    partial class prueba8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,9 +347,6 @@ namespace Wallaboo.Data.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int>("CiudadId")
-                        .HasColumnType("int");
-
                     b.Property<string>("DescripcionComercial")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -358,12 +358,6 @@ namespace Wallaboo.Data.Migrations
                     b.Property<string>("NombreComercial")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaisId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProvinciaId")
-                        .HasColumnType("int");
 
                     b.Property<string>("TelefonoComercial")
                         .IsRequired()

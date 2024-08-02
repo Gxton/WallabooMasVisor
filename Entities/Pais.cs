@@ -12,7 +12,7 @@ namespace Wallaboo.Entities
     {
         public int id {  get; set; }
         public string NombrePais { get; set; } = null!;
-       // public List<Provincia> Provincias { get; set; } = null!;
+       //public List<Provincia> Provincias { get; set; } = null!;
 
     }
 }

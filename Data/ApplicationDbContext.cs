@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using System.Linq.Expressions;
@@ -11,7 +12,7 @@ using Wallaboo.Services;
 
 namespace Wallaboo.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         private string tenantId;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IServiceTenant serviceTenant)
@@ -20,12 +21,7 @@ namespace Wallaboo.Data
             tenantId = serviceTenant.Obtenertenant();
         }
         //Gestion Tenant
-        public static LambdaExpression ArmarFiltroGlobalTenant<TEntidad>(ApplicationDbContext context)
-            where TEntidad : class, IEntidadTenant
-        {
-            Expression<Func<TEntidad, bool>> filtro = x => x.TenantId == context.tenantId;
-            return filtro;
-        }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var item in ChangeTracker.Entries().Where(e => e.State == EntityState.Added
@@ -46,10 +42,13 @@ namespace Wallaboo.Data
         {
             base.OnModelCreating(modelBuilder);
 
-
-            modelBuilder.Entity<Pais>().HasData(new Pais { id = 1, NombrePais = "Argentina" });
-            modelBuilder.Entity<Provincia>().HasData(new Provincia() { PaisId=1, id=1, NombreProvincia="Buenos Aires"});
-            modelBuilder.Entity<Ciudad>().HasData(new Ciudad() {ProvinciaId=1, Id=1, NombreCiudad="Mar del Plata" });
+            //modelBuilder.Entity<Cliente>(entityTypeBuilder =>
+            //{
+            //    entityTypeBuilder.ToTable("Usuarios");
+            //});
+            //modelBuilder.Entity<Pais>().HasData(new Pais { id = 1, NombrePais = "Argentina" });
+            //modelBuilder.Entity<Provincia>().HasData(new Provincia() { PaisId=1, id=1, NombreProvincia="Buenos Aires"});
+            //modelBuilder.Entity<Ciudad>().HasData(new Ciudad() {ProvinciaId=1, Id=1, NombreCiudad="Mar del Plata" });
 
             //Aplica las configuraciones del proyecto (en este caso carpeta Configuraciones (Interfaces))
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -76,11 +75,17 @@ namespace Wallaboo.Data
                 }
             }
         }
-
+        public static LambdaExpression ArmarFiltroGlobalTenant<TEntidad>(ApplicationDbContext context)
+                where TEntidad : class, IEntidadTenant
+        {
+            Expression<Func<TEntidad, bool>> filtro = x => x.TenantId == context.tenantId;
+            return filtro;
+        }
         public DbSet<Anuncio> Anuncios => Set<Anuncio>();
-        public DbSet<Cliente> Clientes => Set<Cliente>();
+        public DbSet<Usuario> Usuarios => Set<Usuario>();
         public DbSet<Pais> Paises => Set<Pais>();
         public DbSet<Provincia> Provincias => Set<Provincia>();
         public DbSet<Ciudad> Ciudades => Set<Ciudad>();
+        //public DbSet<IdentityUser> Usuarios => Set<IdentityUser>();
     }
 }
