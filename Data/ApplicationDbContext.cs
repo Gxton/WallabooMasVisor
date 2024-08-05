@@ -4,15 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using Wallabo.Entities;
 using Wallaboo.Entities;
+using Wallaboo.Entities.Configs;
 using Wallaboo.Interfaces;
 using Wallaboo.Services;
 
 
 namespace Wallaboo.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
             private string tenantId;
 
@@ -45,15 +47,21 @@ namespace Wallaboo.Data
             {
                 base.OnModelCreating(builder);
 
-                builder.Entity<Pais>().HasData(new Pais[]
-                    {
-                    new Pais{id = 1, NombrePais = "República Dominicana"},
-                    new Pais{id = 2, NombrePais = "México"},
-                    new Pais{id = 3, NombrePais = "Colombia"}
-                    });
+            builder.ApplyConfiguration(new AnuncioConfig());
+            builder.ApplyConfiguration(new CiudadConfig());
+            builder.ApplyConfiguration(new PaisConfig());
+            builder.ApplyConfiguration(new ProvinciaConfig());
+            builder.ApplyConfiguration(new UsuarioConfig());
+
+            //builder.Entity<Pais>().HasData(new Pais[]
+            //    {
+            //    new Pais{id = 1, NombrePais = "República Dominicana"},
+            //    new Pais{id = 2, NombrePais = "México"},
+            //    new Pais{id = 3, NombrePais = "Colombia"}
+            //    });
 
 
-                foreach (var entidad in builder.Model.GetEntityTypes())
+            foreach (var entidad in builder.Model.GetEntityTypes())
                 {
                     var tipo = entidad.ClrType;
 
@@ -87,8 +95,11 @@ namespace Wallaboo.Data
                 return filtro;
             }
 
-            public DbSet<Anuncio> Anuncios => Set<Anuncio>();
-            public DbSet<Pais> Paises => Set<Pais>();
+        public DbSet<Anuncio> Anuncios => Set<Anuncio>();
+        public DbSet<Pais> Paises => Set<Pais>();
+        public DbSet<Provincia> Provincias => Set<Provincia>();
+        public DbSet<Ciudad> Ciudades => Set<Ciudad>();
+        public DbSet<Usuario> Usuarios => Set<Usuario>();
 
         }
     }

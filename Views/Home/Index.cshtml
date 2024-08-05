@@ -6,10 +6,10 @@
 
 <div class="text-center">
     <h1 class="display-4">WALLABOO</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Bienvenido sistema de generacion de anuncios´para negocios</p>
 </div>
 
-<div> 
+@* <div> 
     <h3>Claims</h3>
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
@@ -18,27 +18,29 @@
             <p>@claim.Type - @claim.Value</p>
         }
     }
-</div>
+</div> *@
 
 <div>
     <h3>Anuncios</h3>
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
 
-        <form method="post" class="row row-cols-lg-auto g-3 align-items-center">
+@*         <form method="post" class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
                 <input type="text" class="form-control" id="Descripcion" name="Descripcion" placeholder="Descripcion del Anuncio">
             </div>
-
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Crear anuncio</button>
             </div>
-        </form>
+        </form> *@
 
         <ul>
             @foreach (var anuncio in Model.Anuncios)
             {
                 <li>@anuncio.Descripcion</li>
+                <li>@anuncio.FechaDesde</li>
+                <li>@anuncio.FechaHasta</li>
+                <li>@anuncio.Precio</li>
             }
         </ul>
     }
@@ -49,7 +51,7 @@
 
 </div>
 
-<div>
+@* <div>
     <h3>Países</h3>
     <ul>
         @foreach (var país in Model.Paises)
@@ -57,4 +59,4 @@
             <li>@país.NombrePais</li>
         }
     </ul>
-</div>
+</div> *@

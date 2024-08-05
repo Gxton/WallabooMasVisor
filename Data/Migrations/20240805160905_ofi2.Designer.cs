@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240805160905_ofi2")]
+    partial class ofi2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -276,14 +279,11 @@ namespace Wallaboo.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("FechaDesde")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("FechaHasta")
-                        .HasColumnType("date");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<DateTime>("FechaHasta")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TenantId")
                         .IsRequired()
@@ -311,13 +311,12 @@ namespace Wallaboo.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PaisId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProvinciaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProvinciaId");
 
                     b.ToTable("Ciudades");
                 });
@@ -355,6 +354,8 @@ namespace Wallaboo.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("PaisId");
 
                     b.ToTable("Provincias");
                 });
@@ -408,6 +409,28 @@ namespace Wallaboo.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Wallaboo.Entities.Ciudad", b =>
+                {
+                    b.HasOne("Wallaboo.Entities.Provincia", "Provincia")
+                        .WithMany()
+                        .HasForeignKey("ProvinciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Provincia");
+                });
+
+            modelBuilder.Entity("Wallaboo.Entities.Provincia", b =>
+                {
+                    b.HasOne("Wallaboo.Entities.Pais", "Pais")
+                        .WithMany()
+                        .HasForeignKey("PaisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pais");
                 });
 #pragma warning restore 612, 618
         }

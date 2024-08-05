@@ -17,7 +17,10 @@ namespace Wallaboo.Controllers
             _logger = logger;
             this.context = context;
         }
-
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
         public async Task<IActionResult> Index()
         {
             var modelo = await ConstruirModeloHomeIndex();
@@ -25,23 +28,23 @@ namespace Wallaboo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(Anuncio anuncio)
-        {
-            context.Add(anuncio);
-            await context.SaveChangesAsync();
-            var modelo =await ConstruirModeloHomeIndex();
-            return View(modelo);
-        }
+        //public async Task<IActionResult> Index(Anuncio anuncio)
+        //{
+        //    context.Add(anuncio);
+        //    await context.SaveChangesAsync();
+        //    var modelo = await ConstruirModeloHomeIndex();
+        //    return View(modelo);
+        //}
 
         private async Task<HomeIndexViewModel> ConstruirModeloHomeIndex()
         {
             var anuncio = await context.Anuncios.ToListAsync();
-            var paises = await context.Paises.ToListAsync();
+            //var paises = await context.Paises.ToListAsync();
 
             var modelo = new HomeIndexViewModel();
 
             modelo.Anuncios = anuncio;
-            modelo.Paises = paises;
+            //modelo.Paises = paises;
             return modelo;
         }
 

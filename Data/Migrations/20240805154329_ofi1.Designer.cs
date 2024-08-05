@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240805154329_ofi1")]
+    partial class ofi1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,46 +227,6 @@ namespace Wallaboo.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Wallabo.Entities.Usuario", b =>
-                {
-                    b.Property<string>("TenantId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CiudadId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescripcionComercial")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DireccionComercial")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NombreComercial")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaisId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProvinciaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TelefonoComercial")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("URLComercial")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TenantId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Usuarios");
-                });
-
             modelBuilder.Entity("Wallaboo.Entities.Anuncio", b =>
                 {
                     b.Property<int>("Id")
@@ -276,14 +239,11 @@ namespace Wallaboo.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("FechaDesde")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("FechaHasta")
-                        .HasColumnType("date");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<DateTime>("FechaHasta")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TenantId")
                         .IsRequired()
@@ -297,29 +257,6 @@ namespace Wallaboo.Data.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("Anuncios");
-                });
-
-            modelBuilder.Entity("Wallaboo.Entities.Ciudad", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NombreCiudad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaisId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProvinciaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ciudades");
                 });
 
             modelBuilder.Entity("Wallaboo.Entities.Pais", b =>
@@ -337,26 +274,23 @@ namespace Wallaboo.Data.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Paises");
-                });
 
-            modelBuilder.Entity("Wallaboo.Entities.Provincia", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("NombreProvincia")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaisId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Provincias");
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            NombrePais = "República Dominicana"
+                        },
+                        new
+                        {
+                            id = 2,
+                            NombrePais = "México"
+                        },
+                        new
+                        {
+                            id = 3,
+                            NombrePais = "Colombia"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
