@@ -7,7 +7,7 @@ namespace Wallaboo.Entities.Configs
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Usuario> builder)
         {
-            //builder.HasKey(cliente => cliente.TenantId);
+            builder.HasKey(usuario => usuario.TenantId);
 
         }
     }

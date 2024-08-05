@@ -8,6 +8,6 @@ namespace Wallaboo.Services
 {
     public interface IServiceTenant
     {
-        string Obtenertenant();
+        string ObtenerTenant();
     }
 }

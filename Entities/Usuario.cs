@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using Wallaboo.Interfaces;
 
 namespace Wallabo.Entities
 {
-    public class Usuario:IdentityUser,IEntidadTenant
+    public class Usuario:IEntidadTenant
     {
 
         //public int Id { get; set; }

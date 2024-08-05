@@ -13,7 +13,7 @@ namespace Wallaboo.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public string Obtenertenant()
+        public string ObtenerTenant()
         {
             var httpContext = httpContextAccessor.HttpContext;
 

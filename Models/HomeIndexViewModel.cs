@@ -1,4 +1,4 @@
-﻿using Wallabo.Entities;
+﻿
 using Wallaboo.Entities;
 
 namespace Wallaboo.Models
