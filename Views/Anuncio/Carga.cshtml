@@ -9,23 +9,54 @@
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
 
-        <form method="post" class="row row-cols-lg-auto g-3 align-items-center">
+        <form method="post" class="row row-cols-lg-auto g-5 align-items-center">
+            
             <div class="col-12">
-                <input type="text" class="form-control" id="Descripcion" name="Descripcion" placeholder="Descripcion del Anuncio">
+                <label asp-for="Descripcion" class="form-label"></label>
+                @* <input type="text" class="form-control" id="Descripcion" name="Descripcion" placeholder="Descripcion del Anuncio"> *@
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="col-12">
-                <input class="form-control" type="date" id="FechaDesde" name="FechaDesde" placeholder="Fecha Desde" asp-format="{0:dd-MM-yyyy}>
+                @* <input type="date" class="form-control" id="FechaDesde" name="FechaDesde" placeholder="Fecha Desde" is-accept-old-day="false" /> *@
+                <label asp-for="FechaDesde" class="form-label"></label>
+                <input asp-for="FechaDesde" class="form-control"/>
+                <span asp-validation-for="FechaDesde" class="text-danger"></span>
             </div>
             <div class="col-12">
-                <input type="date" class="form-control" id="FechaHasta" name="FechaHasta" placeholder="Fecha Hasta" asp-format="{0:dd-MM-yyyy}">
+                @* <input type="date" class="form-control" id="FechaHasta" name="FechaHasta" placeholder="Fecha Hasta" is-accept-old-day="false" /> *@
+                <label asp-for="FechaHasta" class="form-label"></label>
+                <input asp-for="FechaHasta" class="form-control" />
+                <span asp-validation-for="FechaHasta" class="text-danger"></span>
             </div>
             <div class="col-12">
-                <input type="number" class="form-control" id="Precio" name="Precio" placeholder="Precio">
+                @* <input type="text" class="form-control" id="Precio" name="Precio" placeholder="Precio"> *@
+                <label asp-for="Precio" class="form-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Crear anuncio</button>
             </div>
         </form>
+@*         <div class="container">
+            @foreach (var anuncio in Model.Anuncios)
+            {
+                    <div class="col">
+                    <label><b>Descripcion del anuncio:</b>@anuncio.Descripcion</label>
+                    </div>
+                    <div class="col">
+                    <label><b>Fecha Desde:</b>@anuncio.FechaDesde</label>
+                    </div>
+                    <div class="col">
+                    <laberl><b>Fecha Hasta:</b>@anuncio.FechaHasta</laberl>
+                    </div>
+                    <div class="col">
+                    <laberl><b>Precio:</b>@anuncio.Precio</laberl>
+                    </div>
+                <b></b>
+            }
+        </div> *@
     }
     else
     {
@@ -33,3 +64,14 @@
     }
 
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    $(document).ready(function () {
+        $('#FechaDesde').datepicker({
+            startDate: new Date()
+        });
+    });
+</script>

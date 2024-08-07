@@ -35,12 +35,12 @@ namespace Wallaboo.Controllers
         private async Task<AnuncioViewModel> ConstruirModeloAnuncio()
         {
             var anuncio = await context.Anuncios.ToListAsync();
-            //var paises = await context.Paises.ToListAsync();
+            
 
             var modelo = new AnuncioViewModel();
 
             modelo.Anuncios = anuncio;
-            //modelo.Paises = paises;
+            
             return modelo;
         }
         public IActionResult Error()

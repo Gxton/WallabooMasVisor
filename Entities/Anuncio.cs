@@ -17,6 +17,8 @@ namespace Wallaboo.Entities
         public DateOnly FechaDesde { get; set; }
         public DateOnly FechaHasta {  get; set; }
         public decimal Precio { get; set; }
-        public bool activo { get; set; } = false;
+        public int CantidadDias {  get; set; }
+        public int Activo { get; set; } 
+        public int Pagado {  get; set; }
     }
 }

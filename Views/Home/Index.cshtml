@@ -21,28 +21,69 @@
 </div> *@
 
 <div>
-    <h3>Anuncios</h3>
+
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
+        <h3> Gestion de Anuncios</h3>
+        <form method="post" class="row row-cols-lg-auto g-5 align-items-center">
 
-@*         <form method="post" class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
-                <input type="text" class="form-control" id="Descripcion" name="Descripcion" placeholder="Descripcion del Anuncio">
+                <label asp-for="Descripcion" class="form-label"></label>                
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="col-12">                
+                <label asp-for="FechaDesde" class="form-label"></label>
+                <input asp-for="FechaDesde" class="form-control" />
+                <span asp-validation-for="FechaDesde" class="text-danger"></span>
+            </div>
+            <div class="col-12">                
+                <label asp-for="FechaHasta" class="form-label"></label>
+                <input asp-for="FechaHasta" class="form-control" />
+                <span asp-validation-for="FechaHasta" class="text-danger"></span>
+            </div>
+            <div class="col-12">                
+                <label asp-for="Precio" class="form-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Crear anuncio</button>
             </div>
-        </form> *@
-
-        <ul>
+        </form>
+        <br />
+        <div class="container align-items-xxl-center">
             @foreach (var anuncio in Model.Anuncios)
             {
-                <li>@anuncio.Descripcion</li>
-                <li>@anuncio.FechaDesde</li>
-                <li>@anuncio.FechaHasta</li>
-                <li>@anuncio.Precio</li>
+                <table>
+                    <tr>
+                        <td><b>Descripcion del anuncio: </b>@anuncio.Descripcion</td>                        
+                    </tr>
+                    <tr>
+                        <td><b>Fecha Desde: </b>@anuncio.FechaDesde</td>
+                    </tr>
+                    <tr>
+                        <td><b>Fecha Hasta: </b>@anuncio.FechaHasta</td>
+                    </tr>
+                    <tr>
+                        <td><b>Cantidad de dias a publicar: </b>@anuncio.CantidadDias</td>
+                    </tr>
+                    <tr>
+                        <td><b>Precio: </b>@anuncio.Precio</td>
+                    </tr>
+                    <tr>
+                        @if (@anuncio.Activo==1)
+                        {
+                            <td><b>Activo: </b>Si</td>
+                        }else
+                        {
+                            <td><b>Activo: </b>No</td>
+                        }
+                    </tr>
+                </table>
+                <br />
             }
-        </ul>
+        </div>
     }
     else
     {

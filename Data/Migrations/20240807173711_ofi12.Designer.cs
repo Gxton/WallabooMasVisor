@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240807173711_ofi12")]
+    partial class ofi12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,8 +275,9 @@ namespace Wallaboo.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Activo")
-                        .HasColumnType("int");
+                    b.Property<string>("Activo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CantidadDias")
                         .HasColumnType("int");
@@ -288,8 +292,9 @@ namespace Wallaboo.Data.Migrations
                     b.Property<DateOnly>("FechaHasta")
                         .HasColumnType("date");
 
-                    b.Property<int>("Pagado")
-                        .HasColumnType("int");
+                    b.Property<string>("Pagado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");

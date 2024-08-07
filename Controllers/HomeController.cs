@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System.Diagnostics;
 using Wallaboo.Data;
 using Wallaboo.Entities;
@@ -28,13 +30,20 @@ namespace Wallaboo.Controllers
         }
 
         [HttpPost]
-        //public async Task<IActionResult> Index(Anuncio anuncio)
-        //{
-        //    context.Add(anuncio);
-        //    await context.SaveChangesAsync();
-        //    var modelo = await ConstruirModeloHomeIndex();
-        //    return View(modelo);
-        //}
+        public async Task<IActionResult> Index(Anuncio anuncio)
+        {
+            DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
+            DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
+            TimeSpan diff = fechad - fechah;
+            int dias = (int)diff.TotalDays;
+            anuncio.CantidadDias = dias;
+            anuncio.Activo = 0;
+            anuncio.Pagado = 0;
+            context.Add(anuncio);
+            await context.SaveChangesAsync();
+            var modelo = await ConstruirModeloHomeIndex();
+            return View(modelo);
+        }
 
         private async Task<HomeIndexViewModel> ConstruirModeloHomeIndex()
         {

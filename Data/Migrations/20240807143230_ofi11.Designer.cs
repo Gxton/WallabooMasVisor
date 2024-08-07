@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240807143230_ofi11")]
+    partial class ofi11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,8 +275,8 @@ namespace Wallaboo.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Activo")
-                        .HasColumnType("int");
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<int>("CantidadDias")
                         .HasColumnType("int");
@@ -288,8 +291,8 @@ namespace Wallaboo.Data.Migrations
                     b.Property<DateOnly>("FechaHasta")
                         .HasColumnType("date");
 
-                    b.Property<int>("Pagado")
-                        .HasColumnType("int");
+                    b.Property<bool>("Pagado")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");

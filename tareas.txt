@@ -1,1 +1,2 @@
-a Ver si quedo
+Ver los datapicker que no tomen fecha anterior al dia de hoy 07/08/2024
+Sacar diferencia entre fechas para contar los dias a pagar
