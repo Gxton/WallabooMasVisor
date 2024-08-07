@@ -14,18 +14,18 @@ namespace Wallaboo.Models
         [DataType(DataType.Date)]
         [Display(Name = "Activo desde:")]
 
-        public DateOnly FechaDesde { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime FechaDesde { get; set; } = DateTime.Now;
 
         [Display(Name = "Activo hasta:")]
         [DataType(DataType.Date)]
-
-        public DateOnly FechaHasta { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime FechaHasta { get; set; } = DateTime.Now;
 
         [Required]
         [Display(Name = "Ingresa el precio de lo que anuncias")]
+        [Range(0.01, 9999.99)]
         public decimal Precio { get; set; }
         public int CantidadDias {  get; set; }
-        public string Activo { get; set; } 
+        public int Activo { get; set; } 
         public IEnumerable<Anuncio> Anuncios { get; set; } = new List<Anuncio>();
         public IEnumerable<Pais> Paises { get; set; } = new List<Pais>();
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

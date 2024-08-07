@@ -34,8 +34,8 @@ namespace Wallaboo.Controllers
         {
             DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
             DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
-            TimeSpan diff = fechad - fechah;
-            int dias = (int)diff.TotalDays;
+            TimeSpan diff = fechah - fechad;
+            int dias = (int)diff.Days;
             anuncio.CantidadDias = dias;
             anuncio.Activo = 0;
             anuncio.Pagado = 0;

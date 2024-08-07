@@ -14,8 +14,8 @@ namespace Wallaboo.Entities
         public int Id {  get; set; }
         public string Descripcion { get; set; } = null!;
         public string TenantId { get; set; } = null!;
-        public DateOnly FechaDesde { get; set; }
-        public DateOnly FechaHasta {  get; set; }
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta {  get; set; }
         public decimal Precio { get; set; }
         public int CantidadDias {  get; set; }
         public int Activo { get; set; } 

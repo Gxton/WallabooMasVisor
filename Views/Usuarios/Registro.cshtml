@@ -16,15 +16,33 @@
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-
             <div class="mb-3">
                 <label asp-for="Password" class="form-label"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-
+            <div class="mb-3">
+                <label asp-for="NombreComercial" class="form-label"></label>
+                <input asp-for="NombreComercial" class="form-control" />
+                <span asp-validation-for="NombreComercial" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DireccionComercial" class="form-label"></label>
+                <input asp-for="DireccionComercial" class="form-control" />
+                <span asp-validation-for="DireccionComercial" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TelefonoComercial" class="form-label"></label>
+                <input asp-for="TelefonoComercial" class="form-control" />
+                <span asp-validation-for="TelefonoComercial" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DescripcionComercial" class="form-label"></label>
+                <input asp-for="DescripcionComercial" class="form-control" />
+                <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
+            </div>
             <button class="btn-primary btn">Regístrate</button>
-            <a class="btn btn-success" asp-action="login">Ingresar</a>
+            @* <a class="btn btn-success" asp-action="login">Ingresar</a> *@
 
         </form>
     </div>

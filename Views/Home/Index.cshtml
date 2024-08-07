@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <h1 class="display-4">WALLABOO</h1>
-    <p>Bienvenido sistema de generacion de anuncios´para negocios</p>
+    <h2>Sistema de generacion de anuncios para negocios, profesionales y personas</h2>
 </div>
 
 @* <div> 
@@ -60,10 +60,10 @@
                         <td><b>Descripcion del anuncio: </b>@anuncio.Descripcion</td>                        
                     </tr>
                     <tr>
-                        <td><b>Fecha Desde: </b>@anuncio.FechaDesde</td>
+                        <td><b>Fecha Desde: </b>@anuncio.FechaDesde.ToShortDateString()</td>
                     </tr>
                     <tr>
-                        <td><b>Fecha Hasta: </b>@anuncio.FechaHasta</td>
+                        <td><b>Fecha Hasta: </b>@anuncio.FechaHasta.ToShortDateString()</td>
                     </tr>
                     <tr>
                         <td><b>Cantidad de dias a publicar: </b>@anuncio.CantidadDias</td>
@@ -87,7 +87,9 @@
     }
     else
     {
-        <p>Logueate para que puedas crear y visualizar productos!</p>
+        <div class="text-center">
+            <h3>Logueate para que puedas crear y visualizar anuncios!</h3>
+        </div>
     }
 
 </div>
