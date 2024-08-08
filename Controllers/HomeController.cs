@@ -44,14 +44,9 @@ namespace Wallaboo.Controllers
         private async Task<HomeIndexViewModel> ConstruirModeloHomeIndex()
         {
             var anuncio = await context.Anuncios.ToListAsync();
-            //var paises = await context.Paises.ToListAsync();
-            //var provincias = await context.Provincias.ToListAsync();
-            //var ciudad = await context.Ciudades.ToListAsync();
-
             var modelo = new HomeIndexViewModel();
 
-            //modelo.Anuncios = anuncio;
-            //modelo.Paises = paises;
+            modelo.Anuncios = anuncio;
             return modelo;
         }
 
