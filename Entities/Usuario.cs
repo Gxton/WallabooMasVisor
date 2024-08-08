@@ -21,9 +21,9 @@ namespace Wallabo.Entities
         public string? URLComercial { set; get; }
         public string DescripcionComercial { set; get; } = null!;
         public string TenantId { get; set; } = null!;
-        public int PaisId {  get; set; }
-        public int ProvinciaId {  get; set; }
-        public int CiudadId {  get; set; }
+        public string Pais {  get; set; }=null!;
+        public string Provincia { get; set; } = null!;
+        public string Ciudad { get; set; } = null!;
         //public List<Anuncio> Anuncios { get; set; } = null!;
         
     }

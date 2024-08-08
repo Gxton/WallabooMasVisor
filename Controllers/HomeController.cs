@@ -19,10 +19,6 @@ namespace Wallaboo.Controllers
             _logger = logger;
             this.context = context;
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
         public async Task<IActionResult> Index()
         {
             var modelo = await ConstruirModeloHomeIndex();
@@ -49,10 +45,12 @@ namespace Wallaboo.Controllers
         {
             var anuncio = await context.Anuncios.ToListAsync();
             //var paises = await context.Paises.ToListAsync();
+            //var provincias = await context.Provincias.ToListAsync();
+            //var ciudad = await context.Ciudades.ToListAsync();
 
             var modelo = new HomeIndexViewModel();
 
-            modelo.Anuncios = anuncio;
+            //modelo.Anuncios = anuncio;
             //modelo.Paises = paises;
             return modelo;
         }

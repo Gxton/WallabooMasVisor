@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using Wallabo.Entities;
 using Wallaboo.Data;
+using Wallaboo.Entities;
 using Wallaboo.Models;
 using Wallaboo.Services;
 
@@ -24,7 +26,15 @@ namespace Wallaboo.Controllers
 
         public IActionResult Registro()
         {
-            return View();
+            var paises = _context.Paises.ToList();
+            var provincias = _context.Provincias.ToList();
+            var ciudad = _context.Ciudades.ToList();
+            var modelo = new RegistroViewModel();
+            modelo.ListaPaises = paises;
+            modelo.ListaProvincias = provincias;
+            modelo.ListaCiudades = ciudad;
+            return View(modelo);
+
         }
 
         [HttpPost]
@@ -34,7 +44,8 @@ namespace Wallaboo.Controllers
             {
                 return View(modelo);
             }
-            
+
+
             var usuarioIdentity = new IdentityUser() { Email = modelo.Email, UserName = modelo.Email };
 
             var resultado = await _userManager.CreateAsync(usuarioIdentity, password: modelo.Password);
@@ -80,7 +91,12 @@ namespace Wallaboo.Controllers
         {
             return View();
         }
-
+        [HttpGet]
+        private IActionResult ProvinciasXIdPais(int id)
+        {
+            var llenaprovincias = _context.Provincias.Where(x => x.PaisId == id).First();
+            return View(llenaprovincias);
+        }
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel modelo)
         {

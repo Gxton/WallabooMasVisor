@@ -27,7 +27,8 @@ namespace Wallaboo.Models
         public int CantidadDias {  get; set; }
         public int Activo { get; set; } 
         public IEnumerable<Anuncio> Anuncios { get; set; } = new List<Anuncio>();
-        public IEnumerable<Pais> Paises { get; set; } = new List<Pais>();
+
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (FechaDesde.Day <= FechaHasta.Day)

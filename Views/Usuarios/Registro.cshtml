@@ -1,7 +1,8 @@
 ﻿@model RegistroViewModel
-
 @{
     ViewData["Title"] = "Registro";
+    var types = ViewBag.PaisList as List<SelectListItem>;
+    var subtypes = ViewBag.SubTypesList as List<SelectListItem>;
 }
 
 <h1>Regístrate</h1>
@@ -41,13 +42,52 @@
                 <input asp-for="DescripcionComercial" class="form-control" />
                 <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
             </div>
+            <div>
+                <label asp-for="Pais" class="form-label"></label>
+                <select asp-for="Pais" class="form-control">
+                    @foreach (var pais in Model.ListaPaises)
+                    {
+                        <option value=@pais.id>@pais.NombrePais</option>
+                    }
+                </select>
+                <span asp-validation-for="Pais" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Provincia" class="form-label"></label>
+                <select asp-for="Provincia" class="form-control">
+                    @foreach (var provincia in Model.ListaProvincias)
+                    {
+                        <option value=@provincia.id>@provincia.NombreProvincia</option>
+                    }
+                </select>
+                <span asp-validation-for="Pais" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Ciudad" class="form-label"></label>
+                <select asp-for="Ciudad" class="form-control">
+                    @foreach (var ciudad in Model.ListaCiudades)
+                    {
+                        <option value=@ciudad.Id>@ciudad.NombreCiudad</option>
+                    }
+                </select>
+                <span asp-validation-for="Ciudad" class="text-danger"></span>
+            </div>
+            <br />
+            <br />
             <button class="btn-primary btn">Regístrate</button>
             @* <a class="btn btn-success" asp-action="login">Ingresar</a> *@
-
         </form>
     </div>
 </div>
-
+@* <div>
+    <h3>Países</h3>
+    <ul>
+        @foreach (var pais in Model.ListaPaises)
+        {
+            <li>@pais.NombrePais</li>
+        }
+    </ul>
+</div> *@
 
 
 @section Scripts {

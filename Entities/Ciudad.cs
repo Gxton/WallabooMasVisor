@@ -13,6 +13,6 @@ namespace Wallaboo.Entities
         public string NombreCiudad { get; set; } = null!;
         public int ProvinciaId {  get; set; }
         public int PaisId {  get; set; }
-       // public Provincia Provincia { get; set; } = null!;
+        //public Provincia Provincia { get; set; } = null!;
     }
 }
