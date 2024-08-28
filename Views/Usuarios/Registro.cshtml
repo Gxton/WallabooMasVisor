@@ -1,15 +1,14 @@
 ﻿@model RegistroViewModel
+@using Wallaboo.Entities
 @{
     ViewData["Title"] = "Registro";
-    var types = ViewBag.PaisList as List<SelectListItem>;
-    var subtypes = ViewBag.SubTypesList as List<SelectListItem>;
 }
 
 <h1>Regístrate</h1>
 
 <div class="card">
     <div class="card-body">
-        <form asp-action="Registro">
+        <form asp-action="Registro" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">
@@ -42,35 +41,32 @@
                 <input asp-for="DescripcionComercial" class="form-control" />
                 <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
             </div>
+            @*COMIENZO DE COMBOS*@
+
             <div>
-                <label asp-for="Pais" class="form-label"></label>
-                <select asp-for="Pais" class="form-control">
-                    @foreach (var pais in Model.ListaPaises)
-                    {
-                        <option value=@pais.id>@pais.NombrePais</option>
-                    }
+                <label asp-for="PaisId" class="form-label"></label>               
+                <select id="Countries" name="_pais">
+                    <option value="">Seleccione pais</option>
+                        @foreach (var pais in Model.ListaPaises)
+                        {
+                            <option value=@pais.id>@pais.NombrePais</option>
+                        }
                 </select>
-                <span asp-validation-for="Pais" class="text-danger"></span>
+                <span asp-validation-for="PaisId" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="Provincia" class="form-label"></label>
-                <select asp-for="Provincia" class="form-control">
-                    @foreach (var provincia in Model.ListaProvincias)
-                    {
-                        <option value=@provincia.id>@provincia.NombreProvincia</option>
-                    }
+                <label asp-for="ProvinciaId" class="form-label"></label>
+                <select id="States" name="_provincia">
+                    <option value="">Seleccione Provincia</option>
                 </select>
-                <span asp-validation-for="Pais" class="text-danger"></span>
+                <span asp-validation-for="ProvinciaId" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="Ciudad" class="form-label"></label>
-                <select asp-for="Ciudad" class="form-control">
-                    @foreach (var ciudad in Model.ListaCiudades)
-                    {
-                        <option value=@ciudad.Id>@ciudad.NombreCiudad</option>
-                    }
+                <label asp-for="CiudadId" class="form-label"></label>
+                <select id="Cities" name="_ciudad">
+                    <option value="">Seleccione Ciudad</option>
                 </select>
-                <span asp-validation-for="Ciudad" class="text-danger"></span>
+                <span asp-validation-for="CiudadId" class="text-danger"></span>
             </div>
             <br />
             <br />
@@ -79,17 +75,45 @@
         </form>
     </div>
 </div>
-@* <div>
-    <h3>Países</h3>
-    <ul>
-        @foreach (var pais in Model.ListaPaises)
-        {
-            <li>@pais.NombrePais</li>
-        }
-    </ul>
-</div> *@
 
 
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
+
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#Countries').change(function () {
+            var countryId = $(this).val();
+            $.getJSON('@Url.Action("GetStates")', { countryId: countryId }, function (states) {
+                var statesSelect = $('#States');
+                statesSelect.empty();
+                    var citiesSelect = $('#Cities');
+                    citiesSelect.empty();
+                $.each(states, function (index, state) {
+                    statesSelect.append($('<option/>', {
+                        value: state.value,
+                        text: state.text
+                    }));
+                });
+            });
+        });
+        $('#States').change(function () {
+            var stateId = $(this).val();
+            $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
+                var citiesSelect = $('#Cities');
+                citiesSelect.empty();
+                $.each(cities, function (index, city) {
+                    citiesSelect.append($('<option/>', {
+                        value: city.value,
+                        text: city.text
+                    }));
+                });
+            });
+        });
+    });
+</script>
+
 }

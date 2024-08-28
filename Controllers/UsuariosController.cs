@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Scaffolding;
 using System.Security.Claims;
 using Wallabo.Entities;
 using Wallaboo.Data;
@@ -27,19 +28,46 @@ namespace Wallaboo.Controllers
         public IActionResult Registro()
         {
             var paises = _context.Paises.ToList();
-            var provincias = _context.Provincias.ToList();
-            var ciudad = _context.Ciudades.ToList();
             var modelo = new RegistroViewModel();
             modelo.ListaPaises = paises;
-            modelo.ListaProvincias = provincias;
-            modelo.ListaCiudades = ciudad;
             return View(modelo);
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Registro(RegistroViewModel modelo)
+        //COMIENZO PRUEBA COMBO
+
+        [HttpGet]
+        public IActionResult GetStates(int countryId)
         {
+            var states = _context.Provincias.Where(x => x.PaisId == countryId).ToList();
+            return Json(new SelectList(states, "id", "NombreProvincia"));
+        }
+        [HttpGet]
+        public IActionResult GetCities(int stateId)
+        {
+            var cities = _context.Ciudades.Where(x => x.ProvinciaId == stateId).ToList();
+            return Json(new SelectList(cities,"ProvinciaId", "NombreCiudad"));
+        }
+        //FIN DE PREUBA COMBO
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Registro(RegistroViewModel modelo, int _pais, int _provincia, int _ciudad)
+        {
+            modelo.PaisId = _pais;
+            modelo.ProvinciaId = _provincia;
+            modelo.CiudadId = _ciudad;
             if (!ModelState.IsValid)
             {
                 return View(modelo);
@@ -67,7 +95,10 @@ namespace Wallaboo.Controllers
                     DireccionComercial = modelo.DireccionComercial,
                     TelefonoComercial = modelo.TelefonoComercial,
                     DescripcionComercial = modelo.DescripcionComercial,
-                    URLComercial = Constantes.UrlComercial + usuarioIdentity.Id
+                    URLComercial = Constantes.UrlComercial + usuarioIdentity.Id,
+                    PaisId=modelo.PaisId,
+                    ProvinciaId=modelo.ProvinciaId,
+                    CiudadId=modelo.CiudadId
                 };
                 _context.Add(usuario);
                 _context.SaveChanges();
@@ -75,28 +106,17 @@ namespace Wallaboo.Controllers
                 return RedirectToAction("Index", "Home");
             }
             else
-            {
+            { 
                 foreach (var error in resultado.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);                    
                 }
-
-                return View(modelo);
+                //return View(modelo);
+                return RedirectToAction("Error", "Usuarios");
             }
 
         }
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-        [HttpGet]
-        private IActionResult ProvinciasXIdPais(int id)
-        {
-            var llenaprovincias = _context.Provincias.Where(x => x.PaisId == id).First();
-            return View(llenaprovincias);
-        }
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel modelo)
         {

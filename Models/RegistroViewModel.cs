@@ -33,13 +33,22 @@ namespace Wallaboo.Models
         [MaxLength(150)]
         [Display(Name = "Descripcion de tu negocio o servicio (tienda, kiosko, abogado, particular, etc)")]
         public string DescripcionComercial { get; set; } = null!;
-        public string Pais { get; set; } = null!;
-        public string Provincia {  get; set; } = null!;
-        public string Ciudad { get; set; } = null!;
+
+        [Required]
+        [Display(Name = "Selecciona tu pais de residencia")]
+        public int PaisId { get; set; }
+
+        [Required]
+        [Display(Name = "Selecciona tu provincia de residencia")]
+        public int ProvinciaId {  get; set; }
+
+        [Required]
+        [Display(Name = "Selecciona tu ciudad de residencia")]
+        public int CiudadId { get; set; } 
         
         public IEnumerable<Pais> ListaPaises { get; set; }=new List<Pais>();
-        public IEnumerable<Provincia> ListaProvincias { get; set; } = new List<Provincia>();
-        public IEnumerable<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
+        //public IEnumerable<Provincia> ListaProvincias { get; set; } = new List<Provincia>();
+        //public IEnumerable<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
 
     }
 }
