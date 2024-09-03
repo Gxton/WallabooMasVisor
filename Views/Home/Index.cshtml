@@ -6,8 +6,9 @@
 
 <div class="text-center">
     <h1 class="display-4">WALLABOO</h1>
-@*     <h2>Sistema de generacion de anuncios para negocios, profesionales y personas</h2> *@
 </div>
+@*     <h2>Sistema de generacion de anuncios para negocios, profesionales y personas</h2> *@
+
 
 @* <div> 
     <h3>Claims</h3>
@@ -24,7 +25,7 @@
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-        <h3> Gestion de Anuncios</h3>
+@*         <h3 class="text-center"> Gestion de Anuncios - Crea aqui tus anuncios</h3>
         <form method="post" class="row row-cols-lg-auto g-5 align-items-center">
 
             <div class="col-12">
@@ -50,12 +51,16 @@
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Crear anuncio</button>
             </div>
-        </form>
+        </form> *@
         <br />
         <div class="container align-items-xxl-center">
             @foreach (var anuncio in Model.Anuncios)
             {
+                <input type="hidden" name="Id_Anuncio" id="ID" value="">
                 <table>
+                    <tr>
+                        
+                    </tr>
                     <tr>
                         <td><b>Descripcion del anuncio: </b>@anuncio.Descripcion</td>                        
                     </tr>
@@ -80,8 +85,16 @@
                             <td><b>Activo: </b>No</td>
                         }
                     </tr>
+@*                     <tr>
+                        <td class="col-12">
+                            <button type="submit" class="btn btn-primary">Cancelar Anuncio</button>
+                        </td>
+                    </tr> *@
                 </table>
                 <br />
+                <div class="col-12">
+                    <a href="/Anuncios/Create" class="btn btn-primary">Crea un anuncio</a>
+                </div>
             }
         </div>
     }

@@ -6,6 +6,7 @@ namespace Wallaboo.Models
 {
     public class HomeIndexViewModel
     {
+        public int ID { get; set; }
         [Required]
         [StringLength(1000)]
         [Display(Name = "Ingresa el contenido de tu anuncio")]
