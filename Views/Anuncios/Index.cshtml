@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<Wallaboo.Entities.Anuncio>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Anuncios";
 }
 
-<h1>Index</h1>
-
+<h1>Listado de Anuncios</h1>
+    @if (User.Identity is not null && User.Identity.IsAuthenticated)
+    {
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crea un nuevo Anuncio</a>
 </p>
 <table class="table">
     <thead>
@@ -15,20 +16,23 @@
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
             </th>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.TenantId)
-            </th>
+            </th> *@
             <th>
-                @Html.DisplayNameFor(model => model.FechaDesde)
+                @* @Html.DisplayNameFor(model => model.FechaDesde) *@
+                @Html.DisplayName("Activo desde:")
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHasta)
+            <th>                
+                @* @Html.DisplayNameFor(model => model.FechaHasta) *@
+                @Html.DisplayName("Activo hasta:")
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CantidadDias)
+                @* @Html.DisplayNameFor(model => model.CantidadDias) *@
+                @Html.DisplayName("Dias Activo")
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Activo)
@@ -39,20 +43,22 @@
             <th></th>
         </tr>
     </thead>
+    <br />
+    <br />
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Descripcion)
             </td>
-            <td>
+@*             <td>
                 @Html.DisplayFor(modelItem => item.TenantId)
+            </td> *@
+            <td>
+                    @Html.DisplayFor(modelItem => item.FechaDesde)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaDesde)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaHasta)
+                    @Html.DisplayFor(modelItem => item.FechaHasta)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Precio)
@@ -61,17 +67,54 @@
                 @Html.DisplayFor(modelItem => item.CantidadDias)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Activo)
+                @* @Html.DisplayFor(modelItem => item.Activo) *@
+                @if (item.Activo == 1)
+                        {
+                            @Html.DisplayName("Si")
+                        }
+                        else
+                        {
+                            @Html.DisplayName("No")
+                        }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Pagado)
+                @* @Html.DisplayFor(modelItem => item.Pagado) *@
+                        @if (item.Pagado == 1)
+                        {
+                            @Html.DisplayName("Si")
+                        }
+                        else
+                        {
+                            @Html.DisplayName("No")
+                            @* <a asp-action="Pagar" asp-route-id="@item.Id" class="btn btn-success" type="Hidden">Pagar</a> *@
+                        } 
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @if (item.Pagado == 0)
+                        {
+                            <a asp-action="Pagar" asp-route-id="@item.Id" class="btn btn-success">Pagar</a>
+                        }                        
+            </td>
+            <td>
+                @* <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>  *@
+                        @if (item.FechaHasta >= DateTime.Now)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>
+
+                        } 
+                @* <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> | *@           
+            </td>
+            <td>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+}
+else
+{
+    <div class="text-center">
+        <h3>Logueate para que puedas crear y visualizar anuncios!</h3>
+    </div>
+}

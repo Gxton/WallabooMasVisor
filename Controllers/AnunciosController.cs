@@ -22,6 +22,7 @@ namespace Wallaboo.Controllers
         // GET: Anuncios
         public async Task<IActionResult> Index()
         {
+            //ACA HAY QUE PONER LA CONSULTA PARA TRAER SOLO LOS QUE NO EXTAN VENCIDOS
             return View(await _context.Anuncios.ToListAsync());
         }
 
@@ -54,7 +55,7 @@ namespace Wallaboo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Anuncio anuncio)/*[Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)*/
+        public async Task<IActionResult> Create([Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
         {
         //    if (ModelState.IsValid)
         //    {
@@ -100,11 +101,16 @@ namespace Wallaboo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
-                    _context.Update(anuncio);
+                DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
+                DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
+                TimeSpan diff = fechah - fechad;
+                int dias = (int)diff.Days;
+                anuncio.CantidadDias = dias;
+                _context.Update(anuncio);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -119,8 +125,8 @@ namespace Wallaboo.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            return View(anuncio);
+            //}
+            //return View(anuncio);
         }
 
         // GET: Anuncios/Delete/5

@@ -47,7 +47,7 @@ namespace Wallaboo.Models
         public int CiudadId { get; set; } 
         
         public IEnumerable<Pais> ListaPaises { get; set; }=new List<Pais>();
-        //public IEnumerable<Provincia> ListaProvincias { get; set; } = new List<Provincia>();
+        public IEnumerable<Provincia> ListaProvincias { get; set; } = new List<Provincia>();
         //public IEnumerable<Ciudad> ListaCiudades { get; set; } = new List<Ciudad>();
 
     }

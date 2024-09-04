@@ -3,3 +3,5 @@ Sacar diferencia entre fechas para contar los dias a pagar LISTO
 Ver tema de Combos para registro de usuario LISTO
 Revisar cambios en los combos asi cuando os vuelve a cambiar se setean a cero
 Cuando el modelo de registro da error, los combos no se vuelven a completar (SE ENVIA A PAGINA DE ERROR)
+En el perfil generar el QR de la tienda
+

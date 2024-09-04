@@ -1,44 +1,47 @@
 ﻿@model Wallaboo.Entities.Anuncio
 
+
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edita tu anuncio";
 }
 
-<h1>Edit</h1>
+<h1>Editar Anuncio</h1>
 
 <h4>Anuncio</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TenantId" class="control-label"></label>
-                <input asp-for="TenantId" class="form-control" />
-                <span asp-validation-for="TenantId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaDesde" class="control-label"></label>
-                <input asp-for="FechaDesde" class="form-control" />
-                <span asp-validation-for="FechaDesde" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaHasta" class="control-label"></label>
-                <input asp-for="FechaHasta" class="form-control" />
-                <span asp-validation-for="FechaHasta" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+    @if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Descripcion" class="control-label"></label>
+                    <input asp-for="Descripcion" class="form-control" />
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TenantId" class="control-label" type="hidden"></label>
+                    <input asp-for="TenantId" class="form-control" type="hidden" />
+                    <span asp-validation-for="TenantId" class="text-danger" type="hidden"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaDesde" class="control-label"></label>
+                    <input asp-for="FechaDesde" class="form-control" />
+                    <span asp-validation-for="FechaDesde" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaHasta" class="control-label"></label>
+                    <input asp-for="FechaHasta" class="form-control" />
+                    <span asp-validation-for="FechaHasta" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Precio" class="control-label"></label>
+                    <input asp-for="Precio" class="form-control" />
+                    <span asp-validation-for="Precio" class="text-danger"></span>
+                </div>
+                @*             <div class="form-group">
                 <label asp-for="CantidadDias" class="control-label"></label>
                 <input asp-for="CantidadDias" class="form-control" />
                 <span asp-validation-for="CantidadDias" class="text-danger"></span>
@@ -52,18 +55,24 @@
                 <label asp-for="Pagado" class="control-label"></label>
                 <input asp-for="Pagado" class="form-control" />
                 <span asp-validation-for="Pagado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+            </div> *@
+                <div class="form-group">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+    <div>
+        <a asp-action="Index" class="btn btn-primary">Listado de Anuncios</a>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h3>Logueate para que puedas crear y visualizar anuncios!</h3>
+    </div>
+}
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

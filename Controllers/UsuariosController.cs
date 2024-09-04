@@ -65,7 +65,8 @@ namespace Wallaboo.Controllers
         [HttpPost]
         public async Task<IActionResult> Registro(RegistroViewModel modelo, int _pais, int _provincia, int _ciudad)
         {
-            modelo.PaisId = _pais;
+            modelo.PaisId = 1;
+           //modelo.PaisId = _pais;
             modelo.ProvinciaId = _provincia;
             modelo.CiudadId = _ciudad;
             if (!ModelState.IsValid)
@@ -130,7 +131,8 @@ namespace Wallaboo.Controllers
 
             if (resultado.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                //return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Anuncios");
             }
             else
             {

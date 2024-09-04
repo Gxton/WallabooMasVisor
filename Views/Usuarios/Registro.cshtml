@@ -113,6 +113,19 @@
                 });
             });
         });
+        $('#States').focus(function () {
+                var stateId = $(this).val();
+                $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
+                    var citiesSelect = $('#Cities');
+                    citiesSelect.empty();
+                    $.each(cities, function (index, city) {
+                        citiesSelect.append($('<option/>', {
+                            value: city.value,
+                            text: city.text
+                        }));
+                    });
+                });
+        });
     });
 </script>
 

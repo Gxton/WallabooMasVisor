@@ -12,13 +12,13 @@ namespace Wallaboo.Models
         [Display(Name = "Ingresa el contenido de tu anuncio")]
         public string Descripcion { get; set; } = null!;
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         [Display(Name = "Activo desde:")]
 
         public DateTime FechaDesde { get; set; } = DateTime.Now;
 
         [Display(Name = "Activo hasta:")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime FechaHasta { get; set; } = DateTime.Now;
 
         [Required]

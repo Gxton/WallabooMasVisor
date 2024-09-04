@@ -19,13 +19,13 @@
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
-            <div class="col-12">
-                <label asp-for="FechaDesde" class="form-label"></label>
+            <div class="form-group">
+                <label asp-for="FechaDesde" class="control-label"></label>
                 <input asp-for="FechaDesde" class="form-control" />
                 <span asp-validation-for="FechaDesde" class="text-danger"></span>
             </div>
-            <div class="col-12">
-                <label asp-for="FechaHasta" class="form-label"></label>
+            <div class="form-group">
+                <label asp-for="FechaHasta" class="control-label"></label>
                 <input asp-for="FechaHasta" class="form-control" />
                 <span asp-validation-for="FechaHasta" class="text-danger"></span>
             </div>
@@ -39,7 +39,7 @@
             </div>
     </form>
         <div>
-            <a asp-action="Index">Back to List</a>
+            <a asp-action="Index" class="btn btn-primary">Listado de Anuncios</a>
         </div>
     }
     else
