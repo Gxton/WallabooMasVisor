@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using Wallabo.Entities;
 using Wallaboo.Entities;
 using Wallaboo.Entities.Configs;
+using Wallaboo.Entities.Configuracion;
 using Wallaboo.Interfaces;
 using Wallaboo.Services;
 
@@ -52,6 +53,7 @@ namespace Wallaboo.Data
             builder.ApplyConfiguration(new PaisConfig());
             builder.ApplyConfiguration(new ProvinciaConfig());
             builder.ApplyConfiguration(new UsuarioConfig());
+            builder.ApplyConfiguration(new ImagenConfig());
 
             //builder.Entity<Pais>().HasData(new Pais[]
             //    {
@@ -100,6 +102,7 @@ namespace Wallaboo.Data
         public DbSet<Provincia> Provincias => Set<Provincia>();
         public DbSet<Ciudad> Ciudades => Set<Ciudad>();
         public DbSet<Usuario> Usuarios => Set<Usuario>();
+        public DbSet<Imagen> Imagenes => Set<Imagen>();
 
         }
     }

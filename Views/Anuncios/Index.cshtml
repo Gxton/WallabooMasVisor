@@ -8,7 +8,8 @@
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
 <p>
-    <a asp-action="Create">Crea un nuevo Anuncio</a>
+        <a asp-action="Create">Crea un nuevo Anuncio</a>
+            <p>Mensaje: @ViewBag.Msg </p>
 </p>
 <table class="table">
     <thead>
@@ -43,8 +44,7 @@
             <th></th>
         </tr>
     </thead>
-    <br />
-    <br />
+
     <tbody>
 @foreach (var item in Model) {
         <tr>
@@ -100,13 +100,12 @@
                         @if (item.FechaHasta >= DateTime.Now)
                         {
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>
-
                         } 
                 @* <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> | *@           
             </td>
-            <td>
+@*             <td>
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-            </td>
+            </td> *@
         </tr>
 }
     </tbody>

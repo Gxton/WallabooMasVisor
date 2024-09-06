@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wallaboo.Data;
 using Wallaboo.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Wallaboo.Controllers
 {
@@ -57,18 +58,35 @@ namespace Wallaboo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
         {
-        //    if (ModelState.IsValid)
-        //    {
-            DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
-            DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
-            TimeSpan diff = fechah - fechad;
-            int dias = (int)diff.Days;
-            anuncio.CantidadDias = dias;
-            anuncio.Activo = 1;
-            anuncio.Pagado = 0;
-            _context.Add(anuncio);
-            await _context.SaveChangesAsync();
+            int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
+
+
+            if ((result <= 0) && (anuncio.FechaDesde <= DateTime.Now))
+            { 
+                DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
+                DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
+                TimeSpan diff = fechah - fechad;
+                int dias = (int)diff.Days;
+                if (dias < 1)
+                {
+                    dias = 1;
+                }
+                anuncio.CantidadDias = dias;
+                anuncio.Activo = 1;
+                anuncio.Pagado = 0;
+                _context.Add(anuncio);
+                await _context.SaveChangesAsync();                
+            }
+            else
+            {
+                ViewBag.Msg = "PRUEBA DE MENSAJEl";
+            }
             return RedirectToAction(nameof(Index));
+
+
+            //    if (ModelState.IsValid)
+            //    {
+
             //}
             //return View(anuncio);
         }
@@ -100,19 +118,28 @@ namespace Wallaboo.Controllers
             {
                 return NotFound();
             }
+            int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
 
             //if (ModelState.IsValid)
             //{
-                try
+            try
                 {
-                DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
-                DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
-                TimeSpan diff = fechah - fechad;
-                int dias = (int)diff.Days;
-                anuncio.CantidadDias = dias;
-                _context.Update(anuncio);
-                    await _context.SaveChangesAsync();
+                if ((result <= 0) && (anuncio.FechaDesde <= DateTime.Now))
+                { 
+                    DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
+                    DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
+                    TimeSpan diff = fechah - fechad;
+                    int dias = (int)diff.Days;
+                    if (dias < 1)
+                    {
+                        dias = 1;
+                    }
+                    anuncio.CantidadDias = dias;
+                    _context.Update(anuncio);
+                        await _context.SaveChangesAsync();
                 }
+                else { ViewBag.Msg = "PRUEBA DE MENSAJEl"; }
+            }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AnuncioExists(anuncio.Id))

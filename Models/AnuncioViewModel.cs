@@ -14,12 +14,12 @@ namespace Wallaboo.Models
         [DataType(DataType.Date)]
         [Display(Name = "Activo desde:")]
         
-        public DateOnly FechaDesde { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly FechaDesde { get; set; }/* = DateOnly.FromDateTime(DateTime.Now);*/
 
         [Display(Name = "Activo hasta:")]
         [DataType(DataType.Date)]
 
-        public DateOnly FechaHasta { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly FechaHasta { get; set; }/* = DateOnly.FromDateTime(DateTime.Now);*/
 
         [Required]
         [Display(Name = "Ingresa el precio de lo que anuncias")]

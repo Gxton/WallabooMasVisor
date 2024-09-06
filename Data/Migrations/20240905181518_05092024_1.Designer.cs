@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240905181518_05092024_1")]
+    partial class _05092024_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,35 +333,20 @@ namespace Wallaboo.Data.Migrations
 
             modelBuilder.Entity("Wallaboo.Entities.Imagen", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AnuncioId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Image1Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image2Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image3Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image4Path")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image5Path")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("TenantId");
 
