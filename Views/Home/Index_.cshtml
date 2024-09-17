@@ -1,0 +1,61 @@
+﻿@model HomeIndexViewModel
+
+@{
+    ViewData["Title"] = "Bienvenido a Wallaboo";
+}
+
+<div class="text-center">
+    <h1 class="display-4">WALLABOO PRO</h1>
+</div>
+<div class="text-center">
+    <h2>Sistema de generacion de anuncios para negocios, profesionales y personas</h2>
+</div>
+
+<div>
+    @if (User.Identity is not null && User.Identity.IsAuthenticated)
+    {
+@*         <p>
+            <a asp-action="Create" class="btn btn-primary">Crea una nueva oferta o anuncio</a>
+        </p> *@
+    }
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="p-3 border bg-light" style="width: 18rem;">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+ @*                            <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                        </div>
+                    </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border bg-light" style="width: 18rem;">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+ @*                            <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                        </div>
+                    </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border bg-light" style="width: 18rem;">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+@*                             <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <h3>Logueate para que puedas crear y visualizar anuncios!</h3>
+        </div>
+    </div>
+</div>
+
+
+

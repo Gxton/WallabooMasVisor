@@ -17,12 +17,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
-        <dt class = "col-sm-2">
+@*         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TenantId)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.TenantId)
-        </dd>
+        </dd> *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FechaDesde)
         </dt>
@@ -60,10 +60,11 @@
             @Html.DisplayFor(model => model.Pagado)
         </dd>
     </dl>
-    
+    <br />
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger btn-sm" /> |
+        <br />
+        <a asp-action="Index" class="btn btn-danger btn-sm">Volver al listado</a>
     </form>
 </div>

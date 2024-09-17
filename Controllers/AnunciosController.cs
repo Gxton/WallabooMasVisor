@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wallaboo.Data;
 using Wallaboo.Entities;
+using Wallaboo.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Wallaboo.Controllers
@@ -61,7 +63,7 @@ namespace Wallaboo.Controllers
             int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
 
 
-            if ((result <= 0) && (anuncio.FechaDesde <= DateTime.Now))
+            if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today)) 
             { 
                 DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
                 DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
@@ -72,16 +74,19 @@ namespace Wallaboo.Controllers
                     dias = 1;
                 }
                 anuncio.CantidadDias = dias;
-                anuncio.Activo = 1;
+                anuncio.Activo = 0;
                 anuncio.Pagado = 0;
                 _context.Add(anuncio);
-                await _context.SaveChangesAsync();                
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                ViewBag.Msg = "PRUEBA DE MENSAJEl";
+                ViewBag.Msg = "La fecha de inicio y fin de la publicacion deben ser posteriores a la fecha y hora actual";
+                //return RedirectToAction(nameof(Index));
+                return View();
             }
-            return RedirectToAction(nameof(Index));
+            
 
 
             //    if (ModelState.IsValid)
@@ -124,8 +129,8 @@ namespace Wallaboo.Controllers
             //{
             try
                 {
-                if ((result <= 0) && (anuncio.FechaDesde <= DateTime.Now))
-                { 
+                if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
+                {
                     DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
                     DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
                     TimeSpan diff = fechah - fechad;
@@ -138,8 +143,10 @@ namespace Wallaboo.Controllers
                     _context.Update(anuncio);
                         await _context.SaveChangesAsync();
                 }
-                else { ViewBag.Msg = "PRUEBA DE MENSAJEl"; }
-            }
+                else { 
+                    ViewBag.Msg = "La fecha de inicio y fin de la publicacion deben ser posteriores a la fecha y hora actual";
+                    return View(); }
+                }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AnuncioExists(anuncio.Id))
@@ -192,6 +199,54 @@ namespace Wallaboo.Controllers
         private bool AnuncioExists(int id)
         {
             return _context.Anuncios.Any(e => e.Id == id);
+        }
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> Pay(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var anuncio = await _context.Anuncios.FindAsync(id);
+            if (anuncio == null)
+            {
+                return NotFound();
+            }
+            return View(anuncio);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pay(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
+        {
+            //var anuncioPagar = await _context.Anuncios.FindAsync(id);
+            if (id != anuncio.Id)
+            {
+                return NotFound();
+            }
+            try
+            {
+                anuncio.Pagado = 1;
+                anuncio.Activo = 1;
+                _context.Update(anuncio);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AnuncioExists(anuncio.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

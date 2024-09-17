@@ -43,9 +43,9 @@
             </div>
             @*COMIENZO DE COMBOS*@
 
-            <div>
+            <div class="mb-3">
                 <label asp-for="PaisId" class="form-label"></label>               
-                <select id="Countries" name="_pais">
+                <select id="Countries" name="_pais" class="btn btn-sm dropdown-toggle">
                     <option value="">Seleccione pais</option>
                         @foreach (var pais in Model.ListaPaises)
                         {
@@ -54,23 +54,23 @@
                 </select>
                 <span asp-validation-for="PaisId" class="text-danger"></span>
             </div>
-            <div>
+            <div class="mb-3">
                 <label asp-for="ProvinciaId" class="form-label"></label>
-                <select id="States" name="_provincia">
+                <select id="States" name="_provincia" class="btn btn-sm dropdown-toggle">
                     <option value="">Seleccione Provincia</option>
                 </select>
                 <span asp-validation-for="ProvinciaId" class="text-danger"></span>
             </div>
-            <div>
+            <div class="mb-3">
                 <label asp-for="CiudadId" class="form-label"></label>
-                <select id="Cities" name="_ciudad">
+                <select id="Cities" name="_ciudad" class="btn btn-sm dropdown-toggle">
                     <option value="">Seleccione Ciudad</option>
                 </select>
                 <span asp-validation-for="CiudadId" class="text-danger"></span>
             </div>
             <br />
             <br />
-            <button class="btn-primary btn">Regístrate</button>
+            <button class="btn-primary btn-sm">Regístrate</button>
             @* <a class="btn btn-success" asp-action="login">Ingresar</a> *@
         </form>
     </div>

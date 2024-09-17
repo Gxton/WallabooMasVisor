@@ -27,6 +27,7 @@ namespace Wallaboo.Models
         public decimal Precio { get; set; }
         public int CantidadDias {  get; set; }
         public int Activo { get; set; } 
+        public int Pagado { get; set; }
         public IEnumerable<Anuncio> Anuncios { get; set; } = new List<Anuncio>();
 
 

@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<Wallaboo.Entities.Anuncio>
 
 @{
-    ViewData["Title"] = "Listado de Anuncios";
+    ViewData["Title"] = "Bienvenido a Wallaboo - Listado de Anuncios";
 }
+<div class="text-center">
+    <h1 class="display-4">WALLABOO</h1>
+</div>
 
-<h1>Listado de Anuncios</h1>
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-<p>
-        <a asp-action="Create">Crea un nuevo Anuncio</a>
-            <p>Mensaje: @ViewBag.Msg </p>
-</p>
+        <h1>Listado de Anuncios</h1>
+
 <table class="table">
     <thead>
         <tr>
@@ -68,7 +68,7 @@
             </td>
             <td>
                 @* @Html.DisplayFor(modelItem => item.Activo) *@
-                @if (item.Activo == 1)
+                        @if ((item.Activo == 1) && (item.FechaHasta >= DateTime.Now))
                         {
                             @Html.DisplayName("Si")
                         }
@@ -92,28 +92,69 @@
             <td>
                         @if (item.Pagado == 0)
                         {
-                            <a asp-action="Pagar" asp-route-id="@item.Id" class="btn btn-success">Pagar</a>
-                        }                        
+                            <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-sm">Pagar</a>
+                        }
+                        
             </td>
             <td>
                 @* <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>  *@
-                        @if (item.FechaHasta >= DateTime.Now)
+                        @if ((item.FechaHasta >= DateTime.Now) && (item.Pagado==0))
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>
-                        } 
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Editar</a>
+                        }
+                        
                 @* <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> | *@           
             </td>
-@*             <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-            </td> *@
+            <td>
+                        @if (item.Pagado == 0)
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-lg">Eliminar</a>
+                        }                        
+            </td>
         </tr>
 }
     </tbody>
 </table>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Crea una nueva oferta o anuncio</a>
+    </p>
 }
 else
 {
-    <div class="text-center">
-        <h3>Logueate para que puedas crear y visualizar anuncios!</h3>
+    <div class="d-flex justify-content-center">
+        <div class="card-group">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        @* <img src="..." class="card-img-top" alt="..."> *@
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            @*                            <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        @* <img src="..." class="card-img-top" alt="..."> *@
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            @*                            <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        @* <img src="..." class="card-img-top" alt="..."> *@
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            @*                             <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }

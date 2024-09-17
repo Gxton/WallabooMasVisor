@@ -13,9 +13,12 @@
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
         <h3 class="text-center"> Gestion de Anuncios - Crea aqui tus anuncios</h3>
+        <br />
+        <h5 class="alert">@ViewBag.Msg</h5>
         <form asp-action="Create">
             <div class="col-12">
                 <label asp-for="Descripcion" class="form-label"></label>
+                @* <textarea class="form-control" asp-for="Descripcion" style="height: 100px"></textarea> *@
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
@@ -35,11 +38,11 @@
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="Create" class="btn btn-primary btn-sm" />
             </div>
     </form>
         <div>
-            <a asp-action="Index" class="btn btn-primary">Listado de Anuncios</a>
+            <a asp-action="Index" class="btn btn-primary btn-sm">Listado de Anuncios</a>
         </div>
     }
     else

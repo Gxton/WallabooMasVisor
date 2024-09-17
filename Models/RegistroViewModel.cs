@@ -35,15 +35,15 @@ namespace Wallaboo.Models
         public string DescripcionComercial { get; set; } = null!;
 
         [Required]
-        [Display(Name = "Selecciona tu pais de residencia")]
+        [Display(Name = "Pais")]
         public int PaisId { get; set; }
 
         [Required]
-        [Display(Name = "Selecciona tu provincia de residencia")]
+        [Display(Name = "Provincia/Estado")]
         public int ProvinciaId {  get; set; }
 
         [Required]
-        [Display(Name = "Selecciona tu ciudad de residencia")]
+        [Display(Name = "Ciudad")]
         public int CiudadId { get; set; } 
         
         public IEnumerable<Pais> ListaPaises { get; set; }=new List<Pais>();

@@ -6,7 +6,7 @@ namespace Wallaboo.Models
     public class LoginViewModel
     {
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        [EmailAddress(ErrorMessage = "Debe ser un correo electronico vario")]
+        [EmailAddress(ErrorMessage = "Debe ser un correo electrónico válido")]
         public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = "El campo {0} es requerido")]

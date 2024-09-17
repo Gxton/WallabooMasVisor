@@ -2,30 +2,30 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav">
+<ul class="nav justify-content-end">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hola! @User.Identity?.Name!</a>
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Anuncios", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link text-dark">Salir</button>
             </form>
         </li>
-@*         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="anuncio" asp-action="carga">Crea un nuevo anuncio!</a>
-        </li> *@
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="usuarios" asp-action="registro">Registrate!</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="usuarios" asp-action="login">Ingresar</a>
-        </li>
-
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="usuarios" asp-action="registro">Registrate!</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" asp-controller="usuarios" asp-action="login">Ingresar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Home" asp-action="Help">Ayuda</a>
+            </li>
     }
-
 </ul>
+
+

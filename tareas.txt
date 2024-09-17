@@ -1,7 +1,17 @@
-Ver los datapicker que no tomen fecha anterior al dia de hoy 07/08/2024
+Ver los datapicker que no tomen fecha anterior al dia de hoy 
 Sacar diferencia entre fechas para contar los dias a pagar LISTO
 Ver tema de Combos para registro de usuario LISTO
 Revisar cambios en los combos asi cuando os vuelve a cambiar se setean a cero
 Cuando el modelo de registro da error, los combos no se vuelven a completar (SE ENVIA A PAGINA DE ERROR)
 En el perfil generar el QR de la tienda
+
+PAGINA LOGIN
+
+Acomodar el recuadro de ingreso de datos
+
+PAGINA LISTADO DE ANUNCIOS
+Botones que tengan el mismo tamaño
+
+
+
 

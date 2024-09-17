@@ -1,13 +1,14 @@
 ﻿@model LoginViewModel
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Ingresar";
 }
 
-<h1>Login</h1>
 
-<div class="card">
-    <div class="card-body">
+
+<div class="card" style="max-width: 35rem;">
+    <div class="card-header"><h1>Bienvenido!</h1></div>
+    <div class="card-body" style="max-width: 30rem;">
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
