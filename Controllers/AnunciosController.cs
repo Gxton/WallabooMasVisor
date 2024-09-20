@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wallaboo.Data;
 using Wallaboo.Entities;
+using Wallaboo.Interfaces;
 using Wallaboo.Models;
+using Wallaboo.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Wallaboo.Controllers
@@ -16,17 +18,21 @@ namespace Wallaboo.Controllers
     public class AnunciosController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public AnunciosController(ApplicationDbContext context)
+        private readonly IMercadoPagoService _mercadoPagoService;
+        public AnunciosController(ApplicationDbContext context, IMercadoPagoService mercadoPagoService)
         {
             _context = context;
+            _mercadoPagoService = mercadoPagoService ?? throw new ArgumentNullException(nameof(mercadoPagoService));
         }
 
         // GET: Anuncios
         public async Task<IActionResult> Index()
         {
-            //ACA HAY QUE PONER LA CONSULTA PARA TRAER SOLO LOS QUE NO EXTAN VENCIDOS
-            return View(await _context.Anuncios.ToListAsync());
+            //ver de eliminar desde la BD con un trigger cuando cumplen 15 dias de vencidas
+            return View(await _context.Anuncios.OrderBy(a => a.FechaHasta).ToListAsync());
+            //var fechita = DateTime.Now.AddDays(7);
+            //return View(await _context.Anuncios.Where(a => a.FechaHasta <= fechita)
+            //    .OrderBy(a => a.FechaHasta).ToListAsync());
         }
 
         // GET: Anuncios/Details/5
@@ -217,10 +223,18 @@ namespace Wallaboo.Controllers
             {
                 return NotFound();
             }
-            return View(anuncio);
+            var total = anuncio.CantidadDias * Constantes.ValorUnitario;
+            ViewBag.Total = total;
+            
+            var texto = anuncio.Descripcion;
+            ViewBag.Texto = texto;
+            //return View(anuncio);
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+
+        //PAra prubas locales de estado de pago
         public async Task<IActionResult> Pay(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
         {
             //var anuncioPagar = await _context.Anuncios.FindAsync(id);
@@ -248,5 +262,100 @@ namespace Wallaboo.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+
+        //[HttpGet("customerFind")]
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerId([FromQuery] string email)
+        {
+            try
+            {
+                var customerId = await _mercadoPagoService.GetCustomerIdByEmailAsync(email);
+
+                if (customerId != null)
+                {
+                    return Ok(customerId);
+                }
+                else
+                {
+                    return NotFound($"No se encontró el customer_id para el email: {email}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error al obtener el customer_id: {ex.Message}");
+            }
+        }
+        //[HttpPost("create")]
+        [HttpPost] //CreatePayment//
+        public async Task<IActionResult> Pay([FromForm] decimal amount, [FromForm] string description, [FromForm] string cardNumber, [FromForm] int expirationMonth, [FromForm] int expirationYear, [FromForm] string cardholderName, [FromForm] string securityCode, [FromForm] string email,
+                int id, Anuncio anuncio, Pago pago)
+        {
+            try
+            {
+                // Generar el cardToken
+                var cardToken = await _mercadoPagoService.GenerateCardTokenAsync(cardNumber, expirationMonth, expirationYear, cardholderName, securityCode);
+
+                // Obtener el customerId del email proporcionado
+                var customerId = await _mercadoPagoService.GetCustomerIdByEmailAsync(email);
+
+                if (customerId == null)
+                {
+                    // Si no se encuentra el customerId, crear un nuevo cliente en MercadoPago
+                    customerId = await _mercadoPagoService.CreateCustomerAsync(email);
+                }
+
+                // Asociar la tarjeta al cliente (opcional, dependiendo de la lógica de tu aplicación)
+                // var cardId = await _mercadoPagoService.CreateCardAsync(customerId, cardToken);
+
+                // Crear el pago utilizando los datos del formulario y el cardToken generado
+                var payment = await _mercadoPagoService.CreatePaymentAsync(amount, description, customerId, cardToken, securityCode, email);
+
+                //Insertado mio
+                if (id != anuncio.Id)
+                {
+                    return NotFound();
+                }
+                try
+                {
+                    //modifico el estado de activo y pagad del anuncio
+                    anuncio.Pagado = 1;
+                    anuncio.Activo = 1;
+                    _context.Update(anuncio);
+                    await _context.SaveChangesAsync();
+
+                    //ingreso el pago en la tabla de pagos
+                    pago.total = amount;
+                    pago.AnuncioID=anuncio.Id;
+                    pago.TenantId = anuncio.TenantId;
+                    pago.FechaPago = DateTime.Now;
+
+                    _context.Add(pago);
+                    await _context.SaveChangesAsync();
+
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AnuncioExists(anuncio.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+                //fin insertado mio
+
+                //return Ok(payment); //de MP original
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al procesar el pago: {ex.Message}");
+            }
+        }
     }
+
 }
+

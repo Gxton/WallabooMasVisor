@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wallaboo.Data;
 
@@ -11,9 +12,11 @@ using Wallaboo.Data;
 namespace Wallaboo.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240920172658_20092024_1")]
+    partial class _20092024_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,9 +378,6 @@ namespace Wallaboo.Data.Migrations
 
                     b.Property<int>("AnuncioID")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaPago")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("TenantId")
                         .IsRequired()

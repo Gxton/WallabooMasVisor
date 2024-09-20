@@ -1,52 +1,62 @@
-﻿@model Wallaboo.Entities.Anuncio
-
+﻿@* @model Wallaboo.Entities.Anuncio *@
+@model PagoViewModel
 
 @{
     ViewData["Title"] = "Pagar";
 }
 
-<h1>Pagar anuncio</h1>
+<h2 class="align-content-center">Pagar anuncio</h2>
 
-<h4>Anuncio</h4>
-<hr />
+
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
 {
+
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 bg-light">
             <form asp-action="Pay">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
                 <div class="form-group">
-                    <label asp-for="Descripcion" class="control-label"></label>
-                    <input asp-for="Descripcion" class="form-control" readonly="readonly" />
-                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    <label asp-for="amount" class="control-label"></label>
+                    <input asp-for="amount" class="form-control" readonly="readonly" value=@ViewBag.Total />
+                    <span asp-validation-for="amount" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    @* <label asp-for="TenantId" class="control-label" type="hidden"></label> *@
-                    <input asp-for="TenantId" class="form-control" type="hidden" />
-                    <span asp-validation-for="TenantId" class="text-danger" type="hidden"></span>
+                    <label asp-for="description" class="control-label"></label>
+                    <input asp-for="description" class="form-control" readonly="readonly" value=@ViewBag.Texto/>
+                    <span asp-validation-for="description" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="FechaDesde" class="control-label"></label>
-                    <input asp-for="FechaDesde" class="form-control" readonly="readonly" />
-                    <span asp-validation-for="FechaDesde" class="text-danger"></span>
+                    <label asp-for="cardNumber" class="control-label"></label>
+                    <input asp-for="cardNumber" class="form-control" type="number" maxlength="16" />
+                    <span asp-validation-for="cardNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="FechaHasta" class="control-label"></label>
-                    <input asp-for="FechaHasta" class="form-control" readonly="readonly" />
-                    <span asp-validation-for="FechaHasta" class="text-danger"></span>
+                    <label asp-for="expirationMonth" class="control-label"></label>
+                    <input asp-for="expirationMonth" class="form-control" inputmode="numeric"  maxlength="2"  min="1" max="12" />
+                    <span asp-validation-for="expirationMonth" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Precio" class="control-label"></label>
-                    <input asp-for="Precio" class="form-control" readonly="readonly" />
-                    <span asp-validation-for="Precio" class="text-danger"></span>
+                    <label asp-for="expirationYear" class="control-label"></label>
+                    <input asp-for="expirationYear" class="form-control" inputmode="numeric" maxlength="2" min="24" max="40" />
+                    <span asp-validation-for="expirationYear" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                <label asp-for="CantidadDias" class="control-label"></label>
-                    <input asp-for="CantidadDias" class="form-control" readonly="readonly" />
-                <span asp-validation-for="CantidadDias" class="text-danger"></span>
+                    <label asp-for="cardholderName" class="control-label"></label>
+                    <input asp-for="cardholderName" class="form-control" />
+                    <span asp-validation-for="cardholderName" class="text-danger"></span>
                 </div>
-@*             <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="securityCode" class="control-label"></label>
+                    <input asp-for="securityCode" class="form-control" inputmode="numeric" maxlength="3" min="000" max=" 999"/>
+                    <span asp-validation-for="securityCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="email" class="control-label"></label>
+                    <input type="email" asp-for="email" class="form-control" />
+                    <span asp-validation-for="email" class="text-danger"></span>
+                </div>
+                @*             <div class="form-group">
                 <label asp-for="Activo" class="control-label"></label>
                 <input asp-for="Activo" class="form-control" />
                 <span asp-validation-for="Activo" class="text-danger"></span>
@@ -66,6 +76,7 @@
     <div>
         <a asp-action="Index" class="btn btn-primary">Listado de Anuncios</a>
     </div>
+        <h4 class="align-content-center">Los datos de su tarjeta no se guardarán en nuestros servidores</h4>
 }
 else
 {
@@ -76,9 +87,11 @@ else
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-            <script>
-                src = "https://sdk.mercadopago.com/js/v2";
-                const mp = new MercadoPago("YOUR_PUBLIC_KEY");
-            </script>
     }
+
+    <script>
+        src = "https://sdk.mercadopago.com/js/v2";
+        const mp = new MercadoPago("YOUR_PUBLIC_KEY");
+    </script>
 }
+

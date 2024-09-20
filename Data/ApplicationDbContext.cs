@@ -54,6 +54,7 @@ namespace Wallaboo.Data
             builder.ApplyConfiguration(new ProvinciaConfig());
             builder.ApplyConfiguration(new UsuarioConfig());
             builder.ApplyConfiguration(new ImagenConfig());
+            builder.ApplyConfiguration(new PagoConfig());
 
             //builder.Entity<Pais>().HasData(new Pais[]
             //    {
@@ -103,6 +104,7 @@ namespace Wallaboo.Data
         public DbSet<Ciudad> Ciudades => Set<Ciudad>();
         public DbSet<Usuario> Usuarios => Set<Usuario>();
         public DbSet<Imagen> Imagenes => Set<Imagen>();
+        public DbSet<Pago> Pagos => Set<Pago>();
 
         }
     }

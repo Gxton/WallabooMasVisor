@@ -5,12 +5,17 @@ Revisar cambios en los combos asi cuando os vuelve a cambiar se setean a cero
 Cuando el modelo de registro da error, los combos no se vuelven a completar (SE ENVIA A PAGINA DE ERROR)
 En el perfil generar el QR de la tienda
 
+Ver que no pueda pagar un anuncio luego de la fecha anuncio.fechadesde
+
 PAGINA LOGIN
 
 Acomodar el recuadro de ingreso de datos
 
 PAGINA LISTADO DE ANUNCIOS
 Botones que tengan el mismo tamaño
+
+
+Conseguir las credenciales de MERCADO PAGO DEVELOPERS para terminar la forma de pago
 
 
 
