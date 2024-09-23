@@ -19,26 +19,26 @@
             <div class="col-12">
                 <label asp-for="Descripcion" class="form-label"></label>
                 @* <textarea class="form-control" asp-for="Descripcion" style="height: 100px"></textarea> *@
-                <input asp-for="Descripcion" class="form-control" />
+                <input asp-for="Descripcion" class="form-control w-75" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaDesde" class="control-label"></label>
-                <input asp-for="FechaDesde" class="form-control" />
+                <input asp-for="FechaDesde" class="form-control w-25" />
                 <span asp-validation-for="FechaDesde" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaHasta" class="control-label"></label>
-                <input asp-for="FechaHasta" class="form-control" />
+                <input asp-for="FechaHasta" class="form-control w-25" />
                 <span asp-validation-for="FechaHasta" class="text-danger"></span>
             </div>
             <div class="col-12">
                 <label asp-for="Precio" class="form-label"></label>
-                <input asp-for="Precio" class="form-control" />
+                <input asp-for="Precio" class="form-control w-25" />
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary btn-sm" />
+                    <input type="submit" value="Crear" class="btn btn-primary btn-sm" />
             </div>
     </form>
         <div>

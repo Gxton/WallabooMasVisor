@@ -90,7 +90,7 @@
                         } 
             </td>
             <td>
-                        @if (item.Pagado == 0)
+                        @if ((item.Pagado == 0) && (item.FechaDesde >= DateTime.Now))
                         {
                             <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-sm">Pagar</a>
                         }
@@ -116,7 +116,7 @@
     </tbody>
 </table>
     <p>
-        <a asp-action="Create" class="btn btn-primary">Crea una nueva oferta o anuncio</a>
+        <a asp-action="Create" class="btn btn-primary btn-sm">Crea una nueva oferta o anuncio</a>
     </p>
 }
 else

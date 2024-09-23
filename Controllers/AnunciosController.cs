@@ -70,9 +70,12 @@ namespace Wallaboo.Controllers
 
 
             if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today)) 
-            { 
+            {
+                //var Fechad = DateOnly.FromDateTime(anuncio.FechaDesde);
+                //var Fechah = DateOnly.FromDateTime(anuncio.FechaHasta);
                 DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
                 DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
+
                 TimeSpan diff = fechah - fechad;
                 int dias = (int)diff.Days;
                 if (dias < 1)
