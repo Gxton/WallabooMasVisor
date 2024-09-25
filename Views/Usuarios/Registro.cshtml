@@ -4,82 +4,88 @@
     ViewData["Title"] = "Registro";
 }
 
-<h1>Regístrate</h1>
+<div class="text-center mb-4">
+    <h1>Regístrate</h1>
+</div>
 
-<div class="card">
+<div class="card" style="max-width: 400px; margin: auto;">
     <div class="card-body">
         <form asp-action="Registro" autocomplete="off">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="mb-3">
                 <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" placeholder="tu-email@ejemplo.com" maxlength="100" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" type="password" class="form-control" placeholder="Tu contraseña" maxlength="50" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="NombreComercial" class="form-label"></label>
-                <input asp-for="NombreComercial" class="form-control" />
+                <input asp-for="NombreComercial" class="form-control" placeholder="Nombre comercial" maxlength="50" />
                 <span asp-validation-for="NombreComercial" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="DireccionComercial" class="form-label"></label>
-                <input asp-for="DireccionComercial" class="form-control" />
-                <span asp-validation-for="DireccionComercial" class="text-danger"></span>
-            </div>
+
             <div class="mb-3">
                 <label asp-for="TelefonoComercial" class="form-label"></label>
-                <input asp-for="TelefonoComercial" class="form-control" />
+                <input asp-for="TelefonoComercial" class="form-control" placeholder="Teléfono" maxlength="15" />
                 <span asp-validation-for="TelefonoComercial" class="text-danger"></span>
             </div>
+
+            <div class="mb-3">
+                <label asp-for="DireccionComercial" class="form-label"></label>
+                <input asp-for="DireccionComercial" class="form-control" placeholder="Dirección" maxlength="100" />
+                <span asp-validation-for="DireccionComercial" class="text-danger"></span>
+            </div>
+
             <div class="mb-3">
                 <label asp-for="DescripcionComercial" class="form-label"></label>
-                <input asp-for="DescripcionComercial" class="form-control" />
+                <input asp-for="DescripcionComercial" class="form-control" placeholder="Descripción" maxlength="150" />
                 <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
             </div>
-            @*COMIENZO DE COMBOS*@
 
             <div class="mb-3">
                 <label asp-for="PaisId" class="form-label"></label>               
-                <select id="Countries" name="_pais" class="btn btn-sm dropdown-toggle">
-                    <option value="">Seleccione pais</option>
-                        @foreach (var pais in Model.ListaPaises)
-                        {
-                            <option value=@pais.id>@pais.NombrePais</option>
-                        }
+                <select id="Countries" name="_pais" class="form-select form-select-sm">
+                    <option value="">Seleccione país</option>
+                    @foreach (var pais in Model.ListaPaises)
+                    {
+                        <option value="@pais.id">@pais.NombrePais</option>
+                    }
                 </select>
                 <span asp-validation-for="PaisId" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="ProvinciaId" class="form-label"></label>
-                <select id="States" name="_provincia" class="btn btn-sm dropdown-toggle">
+                <select id="States" name="_provincia" class="form-select form-select-sm">
                     <option value="">Seleccione Provincia</option>
                 </select>
                 <span asp-validation-for="ProvinciaId" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="CiudadId" class="form-label"></label>
-                <select id="Cities" name="_ciudad" class="btn btn-sm dropdown-toggle">
+                <select id="Cities" name="_ciudad" class="form-select form-select-sm">
                     <option value="">Seleccione Ciudad</option>
                 </select>
                 <span asp-validation-for="CiudadId" class="text-danger"></span>
             </div>
-            <br />
-            <br />
-            <button class="btn-primary btn-sm">Regístrate</button>
-            @* <a class="btn btn-success" asp-action="login">Ingresar</a> *@
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Regístrate</button>
+            </div>
         </form>
     </div>
 </div>
 
-
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
-
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -90,8 +96,8 @@
             $.getJSON('@Url.Action("GetStates")', { countryId: countryId }, function (states) {
                 var statesSelect = $('#States');
                 statesSelect.empty();
-                    var citiesSelect = $('#Cities');
-                    citiesSelect.empty();
+                var citiesSelect = $('#Cities');
+                citiesSelect.empty();
                 $.each(states, function (index, state) {
                     statesSelect.append($('<option/>', {
                         value: state.value,
@@ -100,6 +106,7 @@
                 });
             });
         });
+
         $('#States').change(function () {
             var stateId = $(this).val();
             $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
@@ -113,20 +120,6 @@
                 });
             });
         });
-        $('#States').focus(function () {
-                var stateId = $(this).val();
-                $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
-                    var citiesSelect = $('#Cities');
-                    citiesSelect.empty();
-                    $.each(cities, function (index, city) {
-                        citiesSelect.append($('<option/>', {
-                            value: city.value,
-                            text: city.text
-                        }));
-                    });
-                });
-        });
     });
 </script>
-
 }

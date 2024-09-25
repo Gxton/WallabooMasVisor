@@ -12,7 +12,7 @@ namespace Wallaboo.Models
 
         [Required]
         [DisplayName("Anuncio")]
-        public string description { get; set; }
+        public string description { get; set; } = null!;
 
 
         [Required(ErrorMessage = "Ingrese los 16 numeros de su tarjeta")]
@@ -23,14 +23,14 @@ namespace Wallaboo.Models
 
 
         [Required(ErrorMessage = "Seleccione el mes de vencimiento de su tarjeta de crédito")]
-        [DisplayName("Mes de vencimiento de la tarjeta de crédito")]
+        [DisplayName("Mes de vencimiento")]
         [Range(1, 12, ErrorMessage = "Debe ingresar un mes de vencimiento válido")]
         [MaxLength(2, ErrorMessage ="Debe ingresar solo dos caracteres por el mes")]
         public int expirationMonth { get; set; }
 
 
         [Required(ErrorMessage ="Ingrese el año de vencimiento de su tarjeta")]
-        [DisplayName("Año de vencimiento de la tarjeta de crédito")]
+        [DisplayName("Año de vencimiento")]
         [MaxLength(2, ErrorMessage = "Debe ingresar solo dos caracteres por el año")]
         [Range(24, 50, ErrorMessage = "Debe ingresar un año de vencimiento válido")]
         public int expirationYear { get; set; }

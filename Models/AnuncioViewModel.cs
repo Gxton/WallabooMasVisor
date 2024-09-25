@@ -22,7 +22,7 @@ namespace Wallaboo.Models
         public DateOnly FechaHasta { get; set; }/* = DateOnly.FromDateTime(DateTime.Now);*/
 
         [Required]
-        [Display(Name = "Ingresa el precio de lo que anuncias")]
+        [Display(Name = "Precio")]
         public decimal Precio { get; set; }
        // public bool activo { get; set; } = true;
         public IEnumerable<Anuncio> Anuncios { get; set; } = new List<Anuncio>();

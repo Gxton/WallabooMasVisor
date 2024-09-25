@@ -41,16 +41,20 @@
         </main>
     </div>
 
-    <footer class="nav justify-content-center">@* // revisar que quedo como el ojete // *@
-            <div class="col-2">
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="link-info">Privacidad</a>
+    <footer class="bg-light text-center py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="link-info text-decoration-none">Política de Privacidad</a>
+                </div>
+                <div class="col">
+                    <a asp-area="" asp-controller="Home" asp-action="TC" class="link-info text-decoration-none">Términos y Condiciones</a>
+                </div>
+                <div class="col">
+                    <span class="text-muted">&copy; 2024 - Wallaboo. Todos los derechos reservados.</span>
+                </div>
             </div>
-        <div class="col-2">
-                    <a asp-area="" asp-controller="Home" asp-action="TC" class="link-info">Términos y condiciones</a>
-            </div>
-        <div class="col-2">
-                    &copy; 2024 - Wallaboo
-            </div>
+        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

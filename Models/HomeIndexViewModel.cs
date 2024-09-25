@@ -22,7 +22,7 @@ namespace Wallaboo.Models
         public DateTime FechaHasta { get; set; } = DateTime.Now;
 
         [Required]
-        [Display(Name = "Ingresa el precio de lo que anuncias")]
+        [Display(Name = "Precio")]
         [Range(0.01, 9999.99)]
         public decimal Precio { get; set; }
         public int CantidadDias {  get; set; }

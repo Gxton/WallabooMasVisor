@@ -3,154 +3,104 @@
 @{
     ViewData["Title"] = "Bienvenido a Wallaboo - Listado de Anuncios";
 }
-<div class="text-center">
-    <h1 class="display-4">WALLABOO</h1>
-</div>
+@if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+    <h1>Listado de Anuncios</h1>
 
-    @if (User.Identity is not null && User.Identity.IsAuthenticated)
-    {
-        <h1>Listado de Anuncios</h1>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+                <th>@Html.DisplayName("Activo desde:")</th>
+                <th>@Html.DisplayName("Activo hasta:")</th>
+                <th>@Html.DisplayNameFor(model => model.Precio)</th>
+                <th>@Html.DisplayName("Días Activo")</th>
+                <th>@Html.DisplayName("Activo")</th>
+                <th>@Html.DisplayName("Pagado")</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-@*             <th>
-                @Html.DisplayNameFor(model => model.TenantId)
-            </th> *@
-            <th>
-                @* @Html.DisplayNameFor(model => model.FechaDesde) *@
-                @Html.DisplayName("Activo desde:")
-            </th>
-            <th>                
-                @* @Html.DisplayNameFor(model => model.FechaHasta) *@
-                @Html.DisplayName("Activo hasta:")
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.CantidadDias) *@
-                @Html.DisplayName("Dias Activo")
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pagado)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-@*             <td>
-                @Html.DisplayFor(modelItem => item.TenantId)
-            </td> *@
-            <td>
-                    @Html.DisplayFor(modelItem => item.FechaDesde)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.FechaHasta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CantidadDias)
-            </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.Activo) *@
-                        @if ((item.Activo == 1) && (item.FechaHasta >= DateTime.Now))
-                        {
-                            @Html.DisplayName("Si")
-                        }
-                        else
-                        {
-                            @Html.DisplayName("No")
-                        }
-            </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.Pagado) *@
-                        @if (item.Pagado == 1)
-                        {
-                            @Html.DisplayName("Si")
-                        }
-                        else
-                        {
-                            @Html.DisplayName("No")
-                            @* <a asp-action="Pagar" asp-route-id="@item.Id" class="btn btn-success" type="Hidden">Pagar</a> *@
-                        } 
-            </td>
-            <td>
-                        @if ((item.Pagado == 0) && (item.FechaDesde >= DateTime.Now))
-                        {
-                            <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-sm">Pagar</a>
-                        }
-                        
-            </td>
-            <td>
-                @* <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>  *@
-                        @if ((item.FechaHasta >= DateTime.Now) && (item.Pagado==0))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Editar</a>
-                        }
-                        
-                @* <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> | *@           
-            </td>
-            <td>
-                        @if (item.Pagado == 0)
-                        {
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
-                        }                        
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                    <td>@item.FechaDesde</td>
+                    <td>@item.FechaHasta</td>
+                    <td>@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
+                    <td>@item.CantidadDias</td>
+                    <td>@(item.Activo == 1 ? "Sí" : "No")</td>
+                    <td>@(item.Pagado == 1 ? "Sí" : "No")</td>
+                    <td>
+                        <div class="row g-1">
+                            <div class="col">
+                                @if ((item.Pagado == 0) && (item.FechaDesde >= DateTime.Now))
+                                {
+                                    <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-fixed" title="Pagar"><i class="fas fa-money-bill-wave"></i>Pagar</a>
+                                }
+                            </div>
+                            <div class="col">
+                                @if ((item.Pagado == 0))
+                                @* @if ((item.FechaHasta >= DateTime.Now) && (item.Pagado == 0)) *@
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-fixed" title="Editar"><i class="fas fa-edit"></i>Editar</a>
+                                }
+                            </div>
+                            <div class="col">
+                                @if (item.Pagado == 0)
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-fixed"><i class="fas fa-trash-alt"></i>Eliminar</a>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
     <p>
-        <a asp-action="Create" class="btn btn-primary btn-sm">Crea una nueva oferta o anuncio</a>
+        <a asp-action="Create" class="btn btn-primary btn-fixed">Nuevo</a>
     </p>
 }
 else
 {
-    <div class="d-flex justify-content-center">
-        <div class="card-group">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        @* <img src="..." class="card-img-top" alt="..."> *@
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            @*                            <a href="#" class="btn btn-primary">Go somewhere</a> *@
+    <div class="text-center mb-4">
+        <h1 class="display-4">Bienvenido a Wallaboo</h1>
+        <p class="lead">La herramienta perfecta para negocios y profesionales: publica anuncios y permite que tus clientes accedan a ellas fácilmente escaneando un código QR.</p>
+    </div>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center">
+            <div class="card-group">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/imagenes/img_qr.jpg" class="card-img-top" alt="Gestión de Ofertas"> <!-- Reemplaza con la URL de tu imagen -->
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Gestiona tus Ofertas</h5>
+                                <p class="card-text">Crea y administra tus anuncios fácilmente para atraer a más clientes.</p>
+                                <a class="nav-link active" asp-controller="usuarios" asp-action="login">Ingresar</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        @* <img src="..." class="card-img-top" alt="..."> *@
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            @*                            <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/imagenes/img_qr.jpg" class="card-img-top" alt="Generación de Códigos QR"> <!-- Reemplaza con la URL de tu imagen -->
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Genera Códigos QR</h5>
+                                <p class="card-text">Facilita a tus clientes el acceso a tus anuncios escaneando un código QR único.</p>
+                                <a class="nav-link text-dark" asp-controller="usuarios" asp-action="registro">Registrate!</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        @* <img src="..." class="card-img-top" alt="..."> *@
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            @*                             <a href="#" class="btn btn-primary">Go somewhere</a> *@
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/imagenes/img_qr.jpg" class="card-img-top" alt="Soporte al Cliente"> <!-- Reemplaza con la URL de tu imagen -->
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Soporte al Cliente</h5>
+                                <p class="card-text">Estamos aquí para ayudarte. Contáctanos si tienes preguntas sobre nuestras funciones.</p>
+                                <a href="~/Support" class="btn btn-custom w-100">Contáctanos</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -158,3 +108,4 @@ else
         </div>
     </div>
 }
+
