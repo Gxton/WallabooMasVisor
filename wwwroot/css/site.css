@@ -126,3 +126,50 @@ footer .link-info {
     justify-content: center;
     align-items: center;
 }
+
+/* Asegura que los botones tengan el mismo tamaño y un pequeño espacio entre ellos */
+
+/* Asegura que los botones tengan el mismo tamaño y un pequeño espacio entre ellos */
+.btn-fixed {
+    min-width: 100px;
+    max-width: 100px;
+    text-align: center;
+    margin-right: 5px; /* Espacio entre botones */
+}
+
+/* Asegura que cada columna esté alineada y ocupen una sola línea */
+.table td, .table th {
+    white-space: nowrap; /* Evita el salto de línea en las celdas y en los títulos */
+    overflow: hidden; /* Evita que el contenido desborde */
+    text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
+    vertical-align: middle; /* Alinea el contenido verticalmente */
+}
+
+/* Espaciado entre las columnas de botones */
+.table .col {
+    padding: 0 5px; /* Espacio entre columnas */
+}
+
+/* Flex con espaciado entre botones */
+.d-flex .col {
+    flex: 1;
+    padding: 0 5px; /* Pequeño espacio entre botones */
+}
+
+/* Añadir padding a la fila de títulos para que tengan algo de espacio */
+.table thead th {
+    padding: 10px 5px; /* Espacio interno (padding) para los títulos */
+    text-align: center; /* Alineación central de los títulos */
+}
+.table-container {
+    display: flex;
+    justify-content: center; /* Centra la tabla horizontalmente */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+    margin: 0 auto; /* Centra el contenedor en la página */
+}
+
+.table {
+    width: auto; /* Deja que la tabla tenga el ancho según su contenido */
+    max-width: 90%; /* Limita el ancho máximo al 90% del ancho de la pantalla */
+}
+

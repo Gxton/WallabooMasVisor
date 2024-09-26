@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using System.Security.Claims;
 using Wallabo.Entities;
@@ -11,7 +12,7 @@ using Wallaboo.Services;
 
 namespace Wallaboo.Controllers
 {
-    public class UsuariosController: Controller
+    public class UsuariosController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -46,7 +47,7 @@ namespace Wallaboo.Controllers
         public IActionResult GetCities(int stateId)
         {
             var cities = _context.Ciudades.Where(x => x.ProvinciaId == stateId).ToList();
-            return Json(new SelectList(cities,"ProvinciaId", "NombreCiudad"));
+            return Json(new SelectList(cities, "ProvinciaId", "NombreCiudad"));
         }
         //FIN DE PREUBA COMBO
 
@@ -66,7 +67,7 @@ namespace Wallaboo.Controllers
         public async Task<IActionResult> Registro(RegistroViewModel modelo, int _pais, int _provincia, int _ciudad)
         {
             modelo.PaisId = 1;
-           //modelo.PaisId = _pais;
+            //modelo.PaisId = _pais;
             modelo.ProvinciaId = _provincia;
             modelo.CiudadId = _ciudad;
             if (!ModelState.IsValid)
@@ -97,20 +98,20 @@ namespace Wallaboo.Controllers
                     TelefonoComercial = modelo.TelefonoComercial,
                     DescripcionComercial = modelo.DescripcionComercial,
                     URLComercial = Constantes.UrlComercial + usuarioIdentity.Id,
-                    PaisId=modelo.PaisId,
-                    ProvinciaId=modelo.ProvinciaId,
-                    CiudadId=modelo.CiudadId
+                    PaisId = modelo.PaisId,
+                    ProvinciaId = modelo.ProvinciaId,
+                    CiudadId = modelo.CiudadId
                 };
                 _context.Add(usuario);
                 _context.SaveChanges();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Anuncios");
             }
             else
-            { 
+            {
                 foreach (var error in resultado.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);                    
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
                 //return View(modelo);
                 return RedirectToAction("Error", "Usuarios");
@@ -131,6 +132,7 @@ namespace Wallaboo.Controllers
 
             if (resultado.Succeeded)
             {
+                ViewBag.tt = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 //return RedirectToAction("Index", "Home");
                 return RedirectToAction("Index", "Anuncios");
             }
@@ -139,6 +141,50 @@ namespace Wallaboo.Controllers
                 ModelState.AddModelError(string.Empty, "Nombre de usuario o password incorrecto.");
                 return View(modelo);
             }
+        }
+        public async Task<IActionResult> EditUsr()
+        {
+            if (_userManager.GetUserId(User) == null) 
+            {
+                return NotFound();
+            }
+
+            var usr = await _context.Usuarios.FindAsync(_userManager.GetUserId(User));
+            if (_userManager.GetUserId(User) == null)
+            {
+                return NotFound();
+            }
+            return View(usr);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUsr([Bind("NombreComercial, DireccionComercial, TelefonoComercial, ARLComercial, DescripcionComercial, TenantId, PaisId, ProvinciaId, CiudadId")] Usuario usuario)
+        {
+            if (_userManager.GetUserId(User) != usuario.TenantId)
+            {
+                return NotFound();
+            }
+            try
+            {
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UsuarioExists(usuario.TenantId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index),"anuncios");
+        }
+        private bool UsuarioExists(string tenantId)
+        {
+            return _context.Usuarios.Any(e => e.TenantId == tenantId);
         }
     }
 }

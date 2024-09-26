@@ -1,30 +1,37 @@
 ﻿﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@using Wallaboo.Services
 
 <ul class="nav justify-content-end">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hola! @User.Identity?.Name!</a>
+            <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hola! @User.Identity?.Name!</a>
+        </li>
+        <li class="nav-item">
+            <a asp-controller="usuarios" asp-action="EditUsr" class="nav-link text-light"> Editar</a>
+        </li>
+        <li class="nav-item">
+            @ViewBag.tt
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Anuncios", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Salir</button>
+                <button type="submit" class="nav-link btn btn-link text-light">Salir</button>
             </form>
         </li>
     }
     else
     {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-controller="usuarios" asp-action="registro">Registrate!</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" asp-controller="usuarios" asp-action="login">Ingresar</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-controller="Home" asp-action="Help">Ayuda</a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-controller="usuarios" asp-action="registro">Registrate!</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-controller="usuarios" asp-action="login">Ingresar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-controller="Home" asp-action="Help">Ayuda</a>
+        </li>
     }
 </ul>
 

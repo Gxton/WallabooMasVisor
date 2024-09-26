@@ -1,0 +1,55 @@
+﻿@model Wallabo.Entities.Usuario
+
+@{
+    ViewData["Title"] = "Editar Información del Negocio";
+}
+
+<h4 class="text-center text-light">@ViewData["Title"]</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="EditUsr">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="NombreComercial" class="form-control" placeholder="Nombre Comercial" />
+                <label asp-for="NombreComercial" class="form-label"></label>
+                <span asp-validation-for="NombreComercial" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="DireccionComercial" class="form-control" placeholder="Dirección Comercial" />
+                <label asp-for="DireccionComercial" class="form-label"></label>
+                <span asp-validation-for="DireccionComercial" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="TelefonoComercial" class="form-control" placeholder="Teléfono Comercial" />
+                <label asp-for="TelefonoComercial" class="form-label"></label>
+                <span asp-validation-for="TelefonoComercial" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="DescripcionComercial" class="form-control" placeholder="Descripción Comercial" />
+                <label asp-for="DescripcionComercial" class="form-label"></label>
+                <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="TenantId" />
+
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="w-100 btn btn-lg btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-action="Index" asp-controller="Anuncios" class="btn btn-link text-light">Inicio</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
