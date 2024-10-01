@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.IO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
+using Wallabo.Entities; // Asegúrate de incluir el espacio de nombres de tu modelo
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Scaffolding;
+using QRCoder;
 using System.Security.Claims;
-using Wallabo.Entities;
 using Wallaboo.Data;
-using Wallaboo.Entities;
 using Wallaboo.Models;
 using Wallaboo.Services;
+
 
 namespace Wallaboo.Controllers
 {
@@ -36,6 +39,27 @@ namespace Wallaboo.Controllers
         }
 
         //COMIENZO PRUEBA COMBO
+        [HttpGet]
+        public JsonResult GetPaisDescripcion(int id)
+        {
+            var pais = _context.Paises.FirstOrDefault(x => x.id == id);
+            // Lógica para obtener la descripción del país por el id
+            return Json(new { descripcion = pais.NombrePais });
+        }
+
+        [HttpGet]
+        public JsonResult GetProvinciaDescripcion(int id)
+        {
+            var provincia = _context.Provincias.FirstOrDefault(x => x.id == id);
+            return Json(new { descripcion = provincia.NombreProvincia });
+        }
+
+        [HttpGet]
+        public JsonResult GetCiudadDescripcion(int id)
+        {
+            var ciudad = _context.Ciudades.FirstOrDefault(x => x.Id == id);
+            return Json(new { descripcion = ciudad.NombreCiudad });
+        }
 
         [HttpGet]
         public IActionResult GetStates(int countryId)
@@ -62,6 +86,21 @@ namespace Wallaboo.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> Detalle()
+        {
+            if (_userManager.GetUserId(User) == null)
+            {
+                return NotFound();
+            }
+
+            var usr = await _context.Usuarios.FindAsync(_userManager.GetUserId(User));
+            if (_userManager.GetUserId(User) == null)
+            {
+                return NotFound();
+            }
+            return View(usr);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Registro(RegistroViewModel modelo, int _pais, int _provincia, int _ciudad)
@@ -90,6 +129,7 @@ namespace Wallaboo.Controllers
             if (resultado.Succeeded)
             {
                 await _signInManager.SignInAsync(usuarioIdentity, isPersistent: true);
+
                 var usuario = new Usuario()
                 {
                     TenantId = usuarioIdentity.Id,
@@ -98,10 +138,23 @@ namespace Wallaboo.Controllers
                     TelefonoComercial = modelo.TelefonoComercial,
                     DescripcionComercial = modelo.DescripcionComercial,
                     URLComercial = Constantes.UrlComercial + usuarioIdentity.Id,
+                    HorarioComercial = modelo.HorarioComercial,
                     PaisId = modelo.PaisId,
                     ProvinciaId = modelo.ProvinciaId,
                     CiudadId = modelo.CiudadId
                 };
+                // Generar el código QR
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(usuario.URLComercial, QRCodeGenerator.ECCLevel.Q);
+
+                // Generar el gráfico en formato PNG (Bitmap no se requiere directamente aquí)
+                PngByteQRCode pngQRCode = new PngByteQRCode(qrCodeData);
+                byte[] qrCodeBytes = pngQRCode.GetGraphic(20);
+
+                // Guardar el código QR en la base de datos
+
+                usuario.QRURL = qrCodeBytes;
+
                 _context.Add(usuario);
                 _context.SaveChanges();
 
@@ -132,7 +185,7 @@ namespace Wallaboo.Controllers
 
             if (resultado.Succeeded)
             {
-                ViewBag.tt = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //ViewBag.tt = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 //return RedirectToAction("Index", "Home");
                 return RedirectToAction("Index", "Anuncios");
             }
@@ -144,7 +197,7 @@ namespace Wallaboo.Controllers
         }
         public async Task<IActionResult> EditUsr()
         {
-            if (_userManager.GetUserId(User) == null) 
+            if (_userManager.GetUserId(User) == null)
             {
                 return NotFound();
             }
@@ -158,7 +211,7 @@ namespace Wallaboo.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditUsr([Bind("NombreComercial, DireccionComercial, TelefonoComercial, ARLComercial, DescripcionComercial, TenantId, PaisId, ProvinciaId, CiudadId")] Usuario usuario)
+        public async Task<IActionResult> EditUsr([Bind("NombreComercial, DireccionComercial, TelefonoComercial, URLComercial, DescripcionComercial,HorarioComercial, TenantId, PaisId, ProvinciaId, CiudadId")] Usuario usuario)
         {
             if (_userManager.GetUserId(User) != usuario.TenantId)
             {
@@ -180,11 +233,96 @@ namespace Wallaboo.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index),"anuncios");
+            return RedirectToAction(nameof(Index), "anuncios");
         }
         private bool UsuarioExists(string tenantId)
         {
             return _context.Usuarios.Any(e => e.TenantId == tenantId);
         }
+
+        public IActionResult GeneratePdf(string id)
+        {
+            var usuario = _context.Usuarios.Find(id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                // Crear el documento PDF
+                PdfDocument document = new PdfDocument();
+                document.Info.Title = "Nuestras ofertas!";
+
+                // Crear una página
+                PdfPage page = document.AddPage();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+
+                // Configurar fuentes
+                XFont titleFont = new XFont("Arial", 45, XFontStyle.Bold);
+                XFont textFont = new XFont("Arial", 28, XFontStyle.Regular);
+                XFont footerFont = new XFont("Arial", 12, XFontStyle.Regular);
+
+                // Margenes
+                double margin = 40;
+                double contentWidth = page.Width - margin * 2;
+                double yPosition = margin;
+
+                // Dibuja el marco alrededor de todo el contenido del PDF
+                XPen borderPen = new XPen(XColors.Black, 2); // Define el color y el grosor del marco
+                gfx.DrawRectangle(borderPen, margin / 2, margin / 2, page.Width - margin, page.Height - margin);
+
+                // Título
+                gfx.DrawString(usuario.NombreComercial ?? "N/A", titleFont, XBrushes.Black,
+                    new XRect(margin, yPosition, contentWidth, 40), XStringFormats.Center);
+                yPosition += 50;
+
+                gfx.DrawString("Nuestras ofertas de hoy", textFont, XBrushes.Black,
+                    new XRect(margin, yPosition, contentWidth, 40), XStringFormats.Center);
+
+                // Espacio antes del código QR
+                yPosition += 50;
+
+                // Dibuja una línea que atraviese toda la página antes del QR
+                yPosition += 20;
+                gfx.DrawLine(XPens.Black, margin, yPosition, page.Width - margin, yPosition);
+                yPosition += 30;
+
+                // Calcular el espacio disponible entre las dos líneas para centrar el QR
+                double qrSize = 400;
+                double spaceAboveQR = 100;  // Espacio adicional encima del QR
+                double spaceBelowQR = page.Height - yPosition - qrSize - 100 - 60; // Espacio antes de la línea inferior
+                yPosition += spaceAboveQR;
+
+                // Agregar el código QR en el centro si está disponible
+                if (usuario.QRURL != null && usuario.QRURL.Length > 0)
+                {
+                    XImage qrImage = XImage.FromStream(() => new MemoryStream(usuario.QRURL));
+                    gfx.DrawImage(qrImage, (page.Width - qrSize) / 2, yPosition, qrSize, qrSize);
+                }
+
+                // Pie de página
+                gfx.DrawLine(XPens.Black, margin, page.Height - 50, page.Width - margin, page.Height - 50); // Línea horizontal
+                gfx.DrawString("www.wallaboo.com - Marketing de Ofertas", footerFont, XBrushes.Gray,
+                    new XRect(margin, page.Height - 40, contentWidth, 20), XStringFormats.Center); // Leyenda en letras chicas
+
+                // Guardar el documento en un MemoryStream
+                using (var memoryStream = new MemoryStream())
+                {
+                    document.Save(memoryStream, false);
+                    var fileBytes = memoryStream.ToArray();
+                    var fileName = $"{usuario.NombreComercial}.pdf".Replace(" ", "_");
+
+                    return File(fileBytes, "application/pdf", fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error generando el PDF: {ex.Message}");
+            }
+        }
     }
+    
 }
+

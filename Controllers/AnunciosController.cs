@@ -69,7 +69,7 @@ namespace Wallaboo.Controllers
             int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
 
 
-            if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today)) 
+            if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
             {
                 //var Fechad = DateOnly.FromDateTime(anuncio.FechaDesde);
                 //var Fechah = DateOnly.FromDateTime(anuncio.FechaHasta);
@@ -95,7 +95,7 @@ namespace Wallaboo.Controllers
                 //return RedirectToAction(nameof(Index));
                 return View();
             }
-            
+
 
 
             //    if (ModelState.IsValid)
@@ -137,7 +137,7 @@ namespace Wallaboo.Controllers
             //if (ModelState.IsValid)
             //{
             try
-                {
+            {
                 if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
                 {
                     DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
@@ -150,24 +150,26 @@ namespace Wallaboo.Controllers
                     }
                     anuncio.CantidadDias = dias;
                     _context.Update(anuncio);
-                        await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
-                else { 
-                    ViewBag.Msg = "La fecha de inicio y fin de la publicacion deben ser posteriores a la fecha y hora actual";
-                    return View(); }
-                }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!AnuncioExists(anuncio.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ViewBag.Msg = "La fecha de inicio y fin de la publicacion deben ser posteriores a la fecha y hora actual";
+                    return View();
                 }
-                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AnuncioExists(anuncio.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
             //}
             //return View(anuncio);
         }
@@ -228,7 +230,7 @@ namespace Wallaboo.Controllers
             }
             var total = anuncio.CantidadDias * Constantes.ValorUnitario;
             ViewBag.Total = total;
-            
+
             var texto = anuncio.Descripcion;
             ViewBag.Texto = texto;
             //return View(anuncio);
@@ -329,7 +331,7 @@ namespace Wallaboo.Controllers
 
                     //ingreso el pago en la tabla de pagos
                     pago.total = amount;
-                    pago.AnuncioID=anuncio.Id;
+                    pago.AnuncioID = anuncio.Id;
                     pago.TenantId = anuncio.TenantId;
                     pago.FechaPago = DateTime.Now;
 
@@ -361,4 +363,3 @@ namespace Wallaboo.Controllers
     }
 
 }
-

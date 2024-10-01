@@ -56,6 +56,10 @@ namespace Wallaboo.Data
             builder.ApplyConfiguration(new ImagenConfig());
             builder.ApplyConfiguration(new PagoConfig());
 
+            builder.Entity<Usuario>()
+                    .Property(u => u.QRURL)
+                    .HasColumnType("VARBINARY(MAX)");
+
             //builder.Entity<Pais>().HasData(new Pais[]
             //    {
             //    new Pais{id = 1, NombrePais = "República Dominicana"},

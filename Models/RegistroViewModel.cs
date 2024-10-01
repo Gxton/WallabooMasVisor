@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Wallaboo.Entities;
@@ -33,6 +34,10 @@ namespace Wallaboo.Models
         [MaxLength(150)]
         [Display(Name = "Descripcion de tu negocio o servicio (tienda, kiosko, abogado, particular, etc)")]
         public string DescripcionComercial { get; set; } = null!;
+
+        [Required]
+        [DisplayName("Ingresa el horario de atención")]
+        public string HorarioComercial { get; set; } = null!;   
 
         [Required]
         [Display(Name = "Pais")]

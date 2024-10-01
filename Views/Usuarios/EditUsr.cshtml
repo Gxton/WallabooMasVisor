@@ -35,10 +35,22 @@
                 <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
             </div>
 
+            <div class="form-floating mb-3">
+                @Html.TextArea("HorarioComercial", null, new { @class = "form-control", rows = 3 })
+                <label asp-for="HorarioComercial" class="form-label"></label>
+                <span asp-validation-for="HorarioComercial" class="text-danger"></span>
+            </div>
+
             <input type="hidden" asp-for="TenantId" />
 
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="w-100 btn btn-lg btn-primary" />
+            <!-- Fila para botones -->
+            <div class="row">
+                <div class="col">
+                    <input type="submit" value="Guardar" class="w-100 btn btn-lg btn-primary" />
+                </div>
+                <div class="col">
+                    <a asp-action="index" asp-controller="anuncios" class="btn btn-secondary btn-lg w-100">Cancelar</a>
+                </div>
             </div>
         </form>
     </div>
@@ -53,3 +65,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+

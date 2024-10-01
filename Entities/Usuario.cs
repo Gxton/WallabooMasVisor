@@ -11,7 +11,9 @@ namespace Wallabo.Entities
         public string DireccionComercial { get; set;} = null!;
         public string TelefonoComercial { get; set;} = null!;
         public string? URLComercial { set; get; }
+        public byte[]? QRURL { get; set; }
         public string DescripcionComercial { set; get; } = null!;
+        public string HorarioComercial { set; get; } = null!;
         public string TenantId { get; set; } = null!;
         public int PaisId {  get; set; }
         public int ProvinciaId { get; set; } 

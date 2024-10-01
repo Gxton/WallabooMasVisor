@@ -48,7 +48,12 @@
                 <input asp-for="DescripcionComercial" class="form-control" placeholder="Descripción" maxlength="150" />
                 <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
             </div>
-
+            <div class="mb-3">
+                <label asp-for="HorarioComercial" class="form-label"></label>
+                @Html.TextArea("HorarioComercial", null, new { @class = "form-control", rows = 3 })
+                @* <input asp-for="HorarioComercial" class="form-control" placeholder="Horario" maxlength="50" /> *@
+                <span asp-validation-for="HorarioComercial" class="text-danger"></span>
+            </div>
             <div class="mb-3">
                 <label asp-for="PaisId" class="form-label"></label>               
                 <select id="Countries" name="_pais" class="form-select form-select-sm">
@@ -91,6 +96,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Cuando cambie el país, cargar las provincias
         $('#Countries').change(function () {
             var countryId = $(this).val();
             $.getJSON('@Url.Action("GetStates")', { countryId: countryId }, function (states) {
@@ -98,6 +104,7 @@
                 statesSelect.empty();
                 var citiesSelect = $('#Cities');
                 citiesSelect.empty();
+                // Llenar el combo de provincias
                 $.each(states, function (index, state) {
                     statesSelect.append($('<option/>', {
                         value: state.value,
@@ -107,11 +114,13 @@
             });
         });
 
+        // Cuando cambie la provincia, cargar las ciudades
         $('#States').change(function () {
             var stateId = $(this).val();
             $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
                 var citiesSelect = $('#Cities');
                 citiesSelect.empty();
+                // Llenar el combo de ciudades
                 $.each(cities, function (index, city) {
                     citiesSelect.append($('<option/>', {
                         value: city.value,
@@ -120,6 +129,16 @@
                 });
             });
         });
+
+        // Detectar cuando el combo de provincias obtiene el foco
+        $('#States').focus(function () {
+            var firstStateOption = $('#States option:first').val();
+            if (firstStateOption) {
+                // Si hay una opción seleccionada, forzar el cambio
+                $('#States').val(firstStateOption).trigger('change');
+            }
+        });
     });
 </script>
+
 }
