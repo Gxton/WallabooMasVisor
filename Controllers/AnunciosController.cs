@@ -73,27 +73,23 @@ namespace Wallaboo.Controllers
 
             if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
             {
+                // Lógica para calcular días y asignar propiedades
                 DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
                 DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
-
                 TimeSpan diff = fechah - fechad;
-                int dias = (int)diff.Days;
-                if (dias < 1)
-                {
-                    dias = 1;
-                }
+                int dias = (int)diff.Days < 1 ? 1 : (int)diff.Days;
                 anuncio.CantidadDias = dias;
                 anuncio.Activo = 0;
                 anuncio.Pagado = 0;
 
                 _context.Add(anuncio);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // Guarda el anuncio primero
 
                 // Manejo de imágenes
                 if (imagenes != null && imagenes.Count > 0)
                 {
-                    // Crea el directorio si no existe
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
                     if (!Directory.Exists(uploadPath))
                     {
                         Directory.CreateDirectory(uploadPath);
@@ -101,29 +97,29 @@ namespace Wallaboo.Controllers
 
                     foreach (var file in imagenes)
                     {
-                        if (file.Length > 0) // Verifica que el archivo no esté vacío
+                        if (file.Length > 0)
                         {
                             var fileName = $"{Guid.NewGuid()}_{file.FileName}";
                             var filePath = Path.Combine(uploadPath, fileName);
 
-                            // Guarda el archivo en el servidor
+                            // Guarda el archivo
                             using (var stream = new FileStream(filePath, FileMode.Create))
                             {
                                 await file.CopyToAsync(stream);
                             }
 
-                            // Crea una nueva entidad de Imagen y la asocia al anuncio
+                            // Crea la entidad Imagen
                             var imagen = new Imagen
                             {
                                 AnuncioId = anuncio.Id,
                                 TenantId = anuncio.TenantId,
-                                Image1Path = filePath // Almacena la ruta del archivo
+                                Image1Path = fileName // Solo guarda el nombre
                             };
 
                             _context.Imagenes.Add(imagen);
                         }
                     }
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Guarda las imágenes
                 }
 
                 return RedirectToAction(nameof(Index));

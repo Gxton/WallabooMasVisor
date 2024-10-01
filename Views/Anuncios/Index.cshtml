@@ -34,9 +34,10 @@
                                 var imagePath = item.Imagenes.FirstOrDefault()?.Image1Path;
                                 if (!string.IsNullOrEmpty(imagePath))
                                 {
-                                    // Reemplaza la barra invertida con la barra diagonal
-                                    imagePath = imagePath.Replace('\\', '/');
-                                    <img src="@Url.Content(imagePath)" alt="Imagen del anuncio" style="width: 100px; height: 100px;" />
+                                    // Asegúrate de que la ruta sea relativa a la raíz de tu aplicación
+                                    var relativePath = Url.Content("~/uploads/" + imagePath.Substring(imagePath.LastIndexOf("/") + 1));
+
+                                    <img src="@Url.Content(relativePath)" alt="Imagen del anuncio" style="width: 100px; height: 100px;" />
                                 }
                                 else
                                 {

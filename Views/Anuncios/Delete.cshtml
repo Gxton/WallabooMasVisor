@@ -6,7 +6,7 @@
 
 <div class="text-center mb-4">
     <h2>Eliminar Anuncio</h2>
-@*     <h3>¿Está seguro de eliminar este anuncio?</h3> *@
+    @* <h3>¿Está seguro de eliminar este anuncio?</h3> *@
 </div>
 
 <div class="container">
@@ -19,11 +19,11 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
-@*         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TenantId)
+        @* <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.TenantId)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TenantId)
+        @Html.DisplayFor(model => model.TenantId)
         </dd> *@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FechaDesde)
@@ -43,32 +43,37 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Precio)
         </dd>
-@*         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CantidadDias)
+        @* <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.CantidadDias)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CantidadDias)
+        @Html.DisplayFor(model => model.CantidadDias)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Activo)
+        @Html.DisplayNameFor(model => model.Activo)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Activo)
+        @Html.DisplayFor(model => model.Activo)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pagado)
+        @Html.DisplayNameFor(model => model.Pagado)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pagado)
+        @Html.DisplayFor(model => model.Pagado)
         </dd> *@
     </dl>
 
     <br />
     <form asp-action="Delete" onsubmit="return confirmDelete();">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Eliminar" class="btn btn-danger" />
-        <br />
-        <a asp-action="Index" class="btn btn-primary">Inicio</a>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="submit" value="Eliminar" class="btn btn-danger w-100" />
+            </div>
+            <div class="col-md-6">
+                <a asp-action="Index" class="btn btn-primary w-100">Inicio</a>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -77,4 +82,5 @@
         return confirm("¿Estás seguro de que deseas eliminar este anuncio?");
     }
 </script>
+
 
