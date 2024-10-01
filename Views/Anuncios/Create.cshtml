@@ -11,11 +11,10 @@
 <div class="container d-flex justify-content-center">
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-        <div class="col-md-8"> <!-- Colocamos el contenido dentro de una columna -->
-@*             <h3 class="text-center">Gestión de Anuncios - Crea aquí tus anuncios</h3>
-            <br /> *@
+        <div class="col-md-8">
+            <!-- Colocamos el contenido dentro de una columna -->
             <h5 class="alert text-danger">@ViewBag.Msg</h5>
-            <form asp-action="Create" class="mt-4">
+            <form asp-action="Create" enctype="multipart/form-data" method="post" class="mt-4">
                 <div class="row mb-3">
                     <div class="col-md-8">
                         <label asp-for="Descripcion" class="form-label"></label>
@@ -43,6 +42,13 @@
                     </div>
                 </div>
                 <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label for="imagenUpload">Seleccionar Imágenes:</label>
+                        <input type="file" name="imagenes" id="imagenUpload" accept="image/*" multiple class="form-control" />
+                        <span class="text-danger" id="imagenError"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <div class="col-md-4">
                         <input type="submit" value="Crear" class="btn btn-primary btn w-50" />
                     </div>
@@ -61,11 +67,9 @@
     }
 </div>
 
-
-
-
-
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+

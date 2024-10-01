@@ -3,16 +3,20 @@
 
 namespace Wallaboo.Entities
 {
-    public class Anuncio:IEntidadTenant
+    public class Anuncio : IEntidadTenant
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string Descripcion { get; set; } = null!;
         public string TenantId { get; set; } = null!;
         public DateTime FechaDesde { get; set; }
-        public DateTime FechaHasta {  get; set; }
+        public DateTime FechaHasta { get; set; }
         public decimal Precio { get; set; }
-        public int CantidadDias {  get; set; }
-        public int Activo { get; set; } 
-        public int Pagado {  get; set; }
+        public int CantidadDias { get; set; }
+        public int Activo { get; set; }
+        public int Pagado { get; set; }
+
+        // Relación con las imágenes
+        public virtual ICollection<Imagen>? Imagenes { get; set; }
     }
+
 }

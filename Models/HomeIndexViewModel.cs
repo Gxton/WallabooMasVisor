@@ -7,6 +7,7 @@ namespace Wallaboo.Models
     public class HomeIndexViewModel
     {
         public int ID { get; set; }
+
         [Required]
         [StringLength(1000)]
         [Display(Name = "Ingresa el contenido de tu anuncio")]
@@ -14,7 +15,6 @@ namespace Wallaboo.Models
 
         [DataType(DataType.DateTime)]
         [Display(Name = "Activo desde:")]
-
         public DateTime FechaDesde { get; set; } = DateTime.Now;
 
         [Display(Name = "Activo hasta:")]
@@ -25,19 +25,23 @@ namespace Wallaboo.Models
         [Display(Name = "Precio")]
         [Range(0.01, 9999.99)]
         public decimal Precio { get; set; }
-        public int CantidadDias {  get; set; }
-        public int Activo { get; set; } 
+
+        public int CantidadDias { get; set; }
+        public int Activo { get; set; }
         public int Pagado { get; set; }
         public IEnumerable<Anuncio> Anuncios { get; set; } = new List<Anuncio>();
 
+        // Nueva propiedad para las imágenes
+        [Display(Name = "Seleccionar Imágenes")]
+        public IEnumerable<IFormFile>? Imagenes { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (FechaDesde.Day <= FechaHasta.Day)
+            if (FechaDesde > FechaHasta)
             {
-                yield return new ValidationResult("La fecha de finalizacion no puede ser anterior a la de inicio", new[] { "EndDate" });
+                yield return new ValidationResult("La fecha de finalización no puede ser anterior a la de inicio", new[] { "FechaHasta" });
             }
         }
-
     }
 }
+

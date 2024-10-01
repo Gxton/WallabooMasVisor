@@ -12,6 +12,7 @@
             <thead class="table-light">
                 <tr>
                     <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+                    <th>@Html.DisplayName("Imagen")</th> <!-- Nueva columna para las imágenes -->
                     <th>@Html.DisplayName("Activo desde:")</th>
                     <th>@Html.DisplayName("Activo hasta:")</th>
                     <th>@Html.DisplayNameFor(model => model.Precio)</th>
@@ -27,6 +28,26 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                        <td>
+                            @if (item.Imagenes != null && item.Imagenes.Any())
+                            {
+                                var imagePath = item.Imagenes.FirstOrDefault()?.Image1Path;
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    // Reemplaza la barra invertida con la barra diagonal
+                                    imagePath = imagePath.Replace('\\', '/');
+                                    <img src="@Url.Content(imagePath)" alt="Imagen del anuncio" style="width: 100px; height: 100px;" />
+                                }
+                                else
+                                {
+                                    <span>No hay imagen disponible</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>No hay imagen disponible</span>
+                            }
+                        </td>
                         <td>@item.FechaDesde</td>
                         <td>@item.FechaHasta</td>
                         <td>@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
@@ -36,7 +57,7 @@
                         <td>
                             <div class="d-flex justify-content-between">
                                 <div class="col text-center">
-                                    @if ((item.Pagado == 0) && (item.FechaDesde >= DateTime.Now))
+                                    @if ((item.Pagado == 0))
                                     {
                                         <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-fixed" title="Pagar"><i class="fas fa-money-bill-wave"></i> Pagar</a>
                                     }
@@ -110,4 +131,5 @@ else
         </div>
     </div>
 }
+
 

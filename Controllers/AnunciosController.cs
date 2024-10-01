@@ -29,7 +29,9 @@ namespace Wallaboo.Controllers
         public async Task<IActionResult> Index()
         {
             //ver de eliminar desde la BD con un trigger cuando cumplen 15 dias de vencidas
-            return View(await _context.Anuncios.OrderBy(a => a.FechaHasta).ToListAsync());
+            return View(await _context.Anuncios
+                .Include(a => a.Imagenes)
+                .OrderBy(a => a.FechaHasta).ToListAsync());
             //var fechita = DateTime.Now.AddDays(7);
             //return View(await _context.Anuncios.Where(a => a.FechaHasta <= fechita)
             //    .OrderBy(a => a.FechaHasta).ToListAsync());
@@ -64,15 +66,13 @@ namespace Wallaboo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
+
+        public async Task<IActionResult> Create([Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio, IFormFileCollection imagenes)
         {
             int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
 
-
             if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
             {
-                //var Fechad = DateOnly.FromDateTime(anuncio.FechaDesde);
-                //var Fechah = DateOnly.FromDateTime(anuncio.FechaHasta);
                 DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
                 DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
 
@@ -85,24 +85,54 @@ namespace Wallaboo.Controllers
                 anuncio.CantidadDias = dias;
                 anuncio.Activo = 0;
                 anuncio.Pagado = 0;
+
                 _context.Add(anuncio);
                 await _context.SaveChangesAsync();
+
+                // Manejo de imágenes
+                if (imagenes != null && imagenes.Count > 0)
+                {
+                    // Crea el directorio si no existe
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    foreach (var file in imagenes)
+                    {
+                        if (file.Length > 0) // Verifica que el archivo no esté vacío
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            var filePath = Path.Combine(uploadPath, fileName);
+
+                            // Guarda el archivo en el servidor
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            // Crea una nueva entidad de Imagen y la asocia al anuncio
+                            var imagen = new Imagen
+                            {
+                                AnuncioId = anuncio.Id,
+                                TenantId = anuncio.TenantId,
+                                Image1Path = filePath // Almacena la ruta del archivo
+                            };
+
+                            _context.Imagenes.Add(imagen);
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                ViewBag.Msg = "La fecha de inicio y fin de la publicacion deben ser posteriores a la fecha y hora actual";
-                //return RedirectToAction(nameof(Index));
+                ViewBag.Msg = "La fecha de inicio y fin de la publicación deben ser posteriores a la fecha y hora actual.";
                 return View();
             }
-
-
-
-            //    if (ModelState.IsValid)
-            //    {
-
-            //}
-            //return View(anuncio);
         }
 
         // GET: Anuncios/Edit/5
