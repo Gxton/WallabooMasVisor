@@ -23,8 +23,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-    //.AddErrorDescriber<MyErrorDescriber>();
-    
+//.AddErrorDescriber<MyErrorDescriber>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -33,8 +33,7 @@ builder.Services.AddScoped<CustomerClient>();
 builder.Services.AddScoped<PaymentClient>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
 
-
-//Servicios
+// Servicios
 builder.Services.AddTransient<IServiceTenant, ServiceTenant>();
 builder.Services.AddHttpClient<IMercadoPagoService, MercadoPagoService>((serviceProvider, httpClient) =>
 {
@@ -44,16 +43,18 @@ builder.Services.AddHttpClient<IMercadoPagoService, MercadoPagoService>((service
     httpClient.BaseAddress = new Uri("https://api.mercadopago.com/v1/");
     httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
     httpClient.DefaultRequestHeaders.Add("User-Agent", "Wallaboo");
-    //httpClient.DefaultRequestHeaders.Add("User-Agent", "MercadoPagoApp");
-
     // Añadir el token de acceso a los headers de autorización si es necesario
     // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 });
+
 // Configurar Swagger/OpenAPI
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "MercadoPago API", Version = "v1" });
 });
+
+// Configurar Mercado Pago
+MercadoPagoConfig.AccessToken = builder.Configuration["MercadoPagoConfig:AccessToken"];
 
 var app = builder.Build();
 
@@ -79,6 +80,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Añadir autenticación
 app.UseAuthorization();
 
 app.MapControllerRoute(

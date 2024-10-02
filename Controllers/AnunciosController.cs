@@ -308,8 +308,8 @@ namespace Wallaboo.Controllers
             var total = anuncio.CantidadDias * Constantes.ValorUnitario;
             ViewBag.Total = total;
 
-            var texto = anuncio.Descripcion;
-            ViewBag.Texto = texto;
+            var cantidadDias = anuncio.CantidadDias;
+            ViewBag.Texto = cantidadDias;
             //return View(anuncio);
             return View();
         }
@@ -376,74 +376,74 @@ namespace Wallaboo.Controllers
             }
         }
         //[HttpPost("create")]
-        [HttpPost] //CreatePayment//
-        public async Task<IActionResult> Pay([FromForm] decimal amount, [FromForm] string description, [FromForm] string cardNumber, [FromForm] int expirationMonth, [FromForm] int expirationYear, [FromForm] string cardholderName, [FromForm] string securityCode, [FromForm] string email,
-                int id, Anuncio anuncio, Pago pago)
-        {
-            try
-            {
-                // Generar el cardToken
-                var cardToken = await _mercadoPagoService.GenerateCardTokenAsync(cardNumber, expirationMonth, expirationYear, cardholderName, securityCode);
+    //    [HttpPost] //CreatePayment//
+    //    public async Task<IActionResult> Pay([FromForm] decimal amount, [FromForm] string description, [FromForm] string cardNumber, [FromForm] int expirationMonth, [FromForm] int expirationYear, [FromForm] string cardholderName, [FromForm] string securityCode, [FromForm] string email,
+    //            int id, Anuncio anuncio, Pago pago)
+    //    {
+    //        try
+    //        {
+    //            // Generar el cardToken
+    //            var cardToken = await _mercadoPagoService.GenerateCardTokenAsync(cardNumber, expirationMonth, expirationYear, cardholderName, securityCode);
 
-                // Obtener el customerId del email proporcionado
-                var customerId = await _mercadoPagoService.GetCustomerIdByEmailAsync(email);
+    //            // Obtener el customerId del email proporcionado
+    //            var customerId = await _mercadoPagoService.GetCustomerIdByEmailAsync(email);
 
-                if (customerId == null)
-                {
-                    // Si no se encuentra el customerId, crear un nuevo cliente en MercadoPago
-                    customerId = await _mercadoPagoService.CreateCustomerAsync(email);
-                }
+    //            if (customerId == null)
+    //            {
+    //                // Si no se encuentra el customerId, crear un nuevo cliente en MercadoPago
+    //                customerId = await _mercadoPagoService.CreateCustomerAsync(email);
+    //            }
 
-                // Asociar la tarjeta al cliente (opcional, dependiendo de la lógica de tu aplicación)
-                // var cardId = await _mercadoPagoService.CreateCardAsync(customerId, cardToken);
+    //            // Asociar la tarjeta al cliente (opcional, dependiendo de la lógica de tu aplicación)
+    //            // var cardId = await _mercadoPagoService.CreateCardAsync(customerId, cardToken);
 
-                // Crear el pago utilizando los datos del formulario y el cardToken generado
-                var payment = await _mercadoPagoService.CreatePaymentAsync(amount, description, customerId, cardToken, securityCode, email);
+    //            // Crear el pago utilizando los datos del formulario y el cardToken generado
+    //            var payment = await _mercadoPagoService.CreatePaymentAsync(amount, description, customerId, cardToken, securityCode, email);
 
-                //Insertado mio
-                if (id != anuncio.Id)
-                {
-                    return NotFound();
-                }
-                try
-                {
-                    //modifico el estado de activo y pagad del anuncio
-                    anuncio.Pagado = 1;
-                    anuncio.Activo = 1;
-                    _context.Update(anuncio);
-                    await _context.SaveChangesAsync();
+    //            //Insertado mio
+    //            if (id != anuncio.Id)
+    //            {
+    //                return NotFound();
+    //            }
+    //            try
+    //            {
+    //                //modifico el estado de activo y pagad del anuncio
+    //                anuncio.Pagado = 1;
+    //                anuncio.Activo = 1;
+    //                _context.Update(anuncio);
+    //                await _context.SaveChangesAsync();
 
-                    //ingreso el pago en la tabla de pagos
-                    pago.total = amount;
-                    pago.AnuncioID = anuncio.Id;
-                    pago.TenantId = anuncio.TenantId;
-                    pago.FechaPago = DateTime.Now;
+    //                //ingreso el pago en la tabla de pagos
+    //                pago.total = amount;
+    //                pago.AnuncioID = anuncio.Id;
+    //                pago.TenantId = anuncio.TenantId;
+    //                pago.FechaPago = DateTime.Now;
 
-                    _context.Add(pago);
-                    await _context.SaveChangesAsync();
+    //                _context.Add(pago);
+    //                await _context.SaveChangesAsync();
 
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AnuncioExists(anuncio.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-                //fin insertado mio
+    //            }
+    //            catch (DbUpdateConcurrencyException)
+    //            {
+    //                if (!AnuncioExists(anuncio.Id))
+    //                {
+    //                    return NotFound();
+    //                }
+    //                else
+    //                {
+    //                    throw;
+    //                }
+    //            }
+    //            return RedirectToAction(nameof(Index));
+    //            //fin insertado mio
 
-                //return Ok(payment); //de MP original
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al procesar el pago: {ex.Message}");
-            }
-        }
+    //            //return Ok(payment); //de MP original
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            return StatusCode(500, $"Error al procesar el pago: {ex.Message}");
+    //        }
+    //    }
     }
 
 }
