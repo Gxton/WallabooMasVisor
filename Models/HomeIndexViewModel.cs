@@ -31,10 +31,19 @@ namespace Wallaboo.Models
         public int Pagado { get; set; }
         public IEnumerable<Anuncio> Anuncios { get; set; } = new List<Anuncio>();
 
-        // Nueva propiedad para las imágenes
+        // Propiedad para las imágenes subidas
         [Display(Name = "Seleccionar Imágenes")]
         public IEnumerable<IFormFile>? Imagenes { get; set; }
 
+        // Nueva propiedad para las imágenes ya guardadas
+        public IEnumerable<Imagen>? ImagenesGuardadas { get; set; }
+
+        public HomeIndexViewModel()
+        {
+            ImagenesGuardadas = new List<Imagen>(); // Inicializa la lista para evitar null.
+        }
+
+        // Otras propiedades...
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (FechaDesde > FechaHasta)
@@ -44,4 +53,5 @@ namespace Wallaboo.Models
         }
     }
 }
+
 

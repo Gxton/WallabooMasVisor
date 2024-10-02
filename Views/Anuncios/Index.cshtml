@@ -3,6 +3,127 @@
 @{
     ViewData["Title"] = "Bienvenido a Wallaboo - Listado de Anuncios";
 }
+
+@if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+    <h2>Listado de Anuncios</h2>
+
+    <div class="table-container">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+                    <th>@Html.DisplayName("Activo desde:")</th>
+                    <th>@Html.DisplayName("Activo hasta:")</th>
+                    <th>@Html.DisplayNameFor(model => model.Precio)</th>
+                    <th>@Html.DisplayName("Días Activo")</th>
+                    <th>@Html.DisplayName("Activo")</th>
+                    <th>@Html.DisplayName("Pagado")</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="vertical-align: top;">@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                        <td style="vertical-align: top;">@item.FechaDesde</td>
+                        <td style="vertical-align: top;">@item.FechaHasta</td>
+                        <td style="vertical-align: top;">@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
+                        <td style="vertical-align: top;">@item.CantidadDias</td>
+                        <td style="vertical-align: top;">@(item.Activo == 1 ? "Sí" : "No")</td>
+                        <td style="vertical-align: top;">@(item.Pagado == 1 ? "Sí" : "No")</td>
+                        <td style="vertical-align: top;">
+                            <div class="d-flex justify-content-between">
+                                <div class="col text-center">
+                                    @if ((item.Pagado == 0) && (item.FechaDesde >= DateTime.Now))
+                                    {
+                                        <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-fixed" title="Pagar"><i class="fas fa-money-bill-wave"></i> Pagar</a>
+                                    }
+                                </div>
+                                <div class="col text-center">
+                                    @if ((item.Pagado == 0))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-fixed" title="Editar"><i class="fas fa-edit"></i> Editar</a>
+                                    }
+                                </div>
+                                <div class="col text-center">
+                                    @if (item.Pagado == 0)
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-fixed" title="Eliminar"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                                    }
+                                </div>
+                                <div class="col text-center">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-fixed" title="Detalles"><i class="fas fa-info-circle"></i> Detalles</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary btn-fixed">Nuevo</a>
+    </p>
+}
+else
+{
+    <div class="text-center mb-4">
+        <h1 class="display-4">Bienvenido a Wallaboo</h1>
+        <p class="lead">La herramienta perfecta para negocios y profesionales: publica tus ofertas y permite que tus clientes accedan a ellas fácilmente escaneando un código QR.</p>
+    </div>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center">
+            <div class="card-group">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/imagenes/Almacen.png" class="card-img-top" alt="Gestión de Ofertas">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Gestiona tus Ofertas</h5>
+                                <p class="card-text">Crea y administra tus ofertas fácilmente para atraer a más clientes.</p>
+                                <a class="btn btn-custom w-100" asp-controller="usuarios" asp-action="login">Ingresar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/imagenes/QrCode.png" class="card-img-top" alt="Generación de Códigos QR">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Genera Códigos QR</h5>
+                                <p class="card-text">Facilita a tus clientes el acceso a todas tus ofertas escaneando un código QR único.</p>
+                                <a class="btn btn-custom w-100" asp-controller="usuarios" asp-action="registro">Registrate!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/imagenes/Soporte.png" class="card-img-top" alt="Soporte al Cliente">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Soporte al Cliente</h5>
+                                <p class="card-text">Estamos aquí para ayudarte. Contáctanos si tienes preguntas sobre nuestras funciones.</p>
+                                <a href="~/Support" class="btn btn-custom w-100">Contáctanos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+@* @model IEnumerable<Wallaboo.Entities.Anuncio>
+
+@{
+    ViewData["Title"] = "Bienvenido a Wallaboo - Listado de Anuncios";
+}
 @if (User.Identity is not null && User.Identity.IsAuthenticated)
 {
     <h2>Listado de Anuncios</h2>
@@ -58,7 +179,7 @@
                         <td>
                             <div class="d-flex justify-content-between">
                                 <div class="col text-center">
-                                    @if ((item.Pagado == 0))
+                                    @if ((item.Pagado == 0) &&(item.FechaDesde >= DateTime.Now))
                                     {
                                         <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-fixed" title="Pagar"><i class="fas fa-money-bill-wave"></i> Pagar</a>
                                     }
@@ -131,6 +252,6 @@ else
             </div>
         </div>
     </div>
-}
+} *@
 
 

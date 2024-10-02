@@ -6,7 +6,8 @@
     // Convertir el QR en base64 si existe
     string qrCodeBase64 = Model.QRURL != null ? "data:image/png;base64," + Convert.ToBase64String(Model.QRURL) : null;
 }
-
+    @if (User.Identity is not null && User.Identity.IsAuthenticated)
+    {
 <div class="container mt-5">
     <div class="text-center mb-4">
         <h1 class="display-5">Detalle del Negocio</h1>
@@ -88,7 +89,13 @@
         </div>
     </div>
 </div>
-
+    }
+    else
+    {
+<div class="text-center">
+    <h3>¡Inicia sesión para crear y visualizar anuncios!</h3>
+</div>
+    }
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

@@ -1,67 +1,102 @@
-﻿@* @model Wallaboo.Entities.Anuncio *@
-@model HomeIndexViewModel
+﻿@model HomeIndexViewModel
 
 @{
     ViewData["Title"] = "Detalles del Anuncio";
 }
-
-<h1>Details</h1>
+@if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+<h2>Detalles del Anuncio</h2>
 
 <div>
-    <h4>Anuncio</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
+    <div class="row">
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.Descripcion)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-@*         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenantId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TenantId)
-        </dd> *@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaDesde)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayName("Imagen")</strong>
+        </div>
+        <div class="col-sm-10">
+            @if (Model.ImagenesGuardadas != null && Model.ImagenesGuardadas.Any())
+            {
+                var imagePath = Model.ImagenesGuardadas.FirstOrDefault()?.Image1Path;
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    var relativePath = Url.Content("~/uploads/" + imagePath.Substring(imagePath.LastIndexOf("/") + 1));
+                    <img src="@relativePath" alt="Imagen del anuncio" style="width: 150px; height: 150px;" />
+                }
+                else
+                {
+                    <span>No hay imagen disponible</span>
+                }
+            }
+            else
+            {
+                <span>No hay imagen disponible</span>
+            }
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.FechaDesde)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.FechaDesde)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaHasta)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.FechaHasta)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.FechaHasta)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.Precio)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CantidadDias)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.CantidadDias)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.CantidadDias)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Activo)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.Activo)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.Activo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Pagado)
-        </dt>
-        <dd class = "col-sm-10">
+        </div>
+
+        <div class="col-sm-2">
+            <strong>@Html.DisplayNameFor(model => model.Pagado)</strong>
+        </div>
+        <div class="col-sm-10">
             @Html.DisplayFor(model => model.Pagado)
-        </dd>
-    </dl>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Editar Anuncio</a> |
-    <a asp-action="Index">listado de Anuncios</a>
+
+<div class="row mt-3">
+    <div class="col-md-6 text-center">
+        <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-secondary btn-fixed">Editar </a>
+    </div>
+    <div class="col-md-6 text-center">
+        <a asp-action="Index" class="btn btn-primary btn-fixed">Volver</a>
+    </div>
 </div>
+
+    }
+    else
+    {
+<div class="text-center">
+    <h3>¡Inicia sesión para crear y visualizar anuncios!</h3>
+</div>
+    }

@@ -11,6 +11,7 @@ using Wallaboo.Entities;
 using Wallaboo.Interfaces;
 using Wallaboo.Models;
 using Wallaboo.Services;
+using Microsoft.AspNetCore.Http;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Wallaboo.Controllers
@@ -45,15 +46,33 @@ namespace Wallaboo.Controllers
                 return NotFound();
             }
 
+            // Obtén el anuncio junto con sus imágenes
             var anuncio = await _context.Anuncios
+                .Include(a => a.Imagenes) // Asegúrate de incluir las imágenes
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (anuncio == null)
             {
                 return NotFound();
             }
 
-            return View(anuncio);
+            // Crea el modelo para la vista de detalles
+            var model = new HomeIndexViewModel
+            {
+                // Asigna las propiedades necesarias
+                Descripcion = anuncio.Descripcion,
+                FechaDesde = anuncio.FechaDesde,
+                FechaHasta = anuncio.FechaHasta,
+                Precio = anuncio.Precio,
+                CantidadDias = anuncio.CantidadDias,
+                Activo = anuncio.Activo,
+                Pagado = anuncio.Pagado,
+                ImagenesGuardadas = anuncio.Imagenes // Asigna las imágenes
+            };
+
+            return View(model); // Pasa el modelo a la vista
         }
+
 
         // GET: Anuncios/Create
         public IActionResult Create()
@@ -139,65 +158,97 @@ namespace Wallaboo.Controllers
                 return NotFound();
             }
 
-            var anuncio = await _context.Anuncios.FindAsync(id);
+            // Cargar el anuncio y sus imágenes asociadas
+            var anuncio = await _context.Anuncios
+                .Include(a => a.Imagenes) // Incluye la colección de imágenes
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (anuncio == null)
             {
                 return NotFound();
             }
+
             return View(anuncio);
         }
+
 
         // POST: Anuncios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio, IFormFileCollection imagenes)
         {
             if (id != anuncio.Id)
             {
                 return NotFound();
             }
+
             int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
 
-            //if (ModelState.IsValid)
-            //{
-            try
+            if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
             {
-                if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
+                DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
+                DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
+                TimeSpan diff = fechah - fechad;
+                int dias = (int)diff.Days < 1 ? 1 : (int)diff.Days;
+                anuncio.CantidadDias = dias;
+
+                // Actualiza el anuncio
+                _context.Update(anuncio);
+
+                // Manejo de imágenes
+                if (imagenes != null && imagenes.Count > 0)
                 {
-                    DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
-                    DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
-                    TimeSpan diff = fechah - fechad;
-                    int dias = (int)diff.Days;
-                    if (dias < 1)
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+                    if (!Directory.Exists(uploadPath))
                     {
-                        dias = 1;
+                        Directory.CreateDirectory(uploadPath);
                     }
-                    anuncio.CantidadDias = dias;
-                    _context.Update(anuncio);
-                    await _context.SaveChangesAsync();
+
+                    // Borra imágenes existentes asociadas al anuncio (opcional)
+                    var existingImages = await _context.Imagenes.Where(i => i.AnuncioId == anuncio.Id).ToListAsync();
+                    if (existingImages.Any())
+                    {
+                        _context.Imagenes.RemoveRange(existingImages);
+                    }
+
+                    foreach (var file in imagenes)
+                    {
+                        if (file.Length > 0)
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+                            var filePath = Path.Combine(uploadPath, fileName);
+
+                            // Guarda el archivo
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            // Crea la entidad Imagen
+                            var imagen = new Imagen
+                            {
+                                AnuncioId = anuncio.Id,
+                                TenantId = anuncio.TenantId,
+                                Image1Path = fileName // Solo guarda el nombre
+                            };
+
+                            _context.Imagenes.Add(imagen);
+                        }
+                    }
                 }
-                else
-                {
-                    ViewBag.Msg = "La fecha de inicio y fin de la publicacion deben ser posteriores a la fecha y hora actual";
-                    return View();
-                }
+
+                await _context.SaveChangesAsync(); // Guarda los cambios en el anuncio y las imágenes
+
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!AnuncioExists(anuncio.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                ViewBag.Msg = "La fecha de inicio y fin de la publicación deben ser posteriores a la fecha y hora actual.";
+                return View(anuncio); // Devuelve el anuncio para que el usuario pueda corregirlo
             }
-            return RedirectToAction(nameof(Index));
-            //}
-            //return View(anuncio);
         }
 
         // GET: Anuncios/Delete/5
@@ -266,7 +317,7 @@ namespace Wallaboo.Controllers
         [ValidateAntiForgeryToken]
 
         //PAra prubas locales de estado de pago
-        public async Task<IActionResult> Pay(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio)
+        public async Task<IActionResult> Pay(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio, Pago pago)
         {
             //var anuncioPagar = await _context.Anuncios.FindAsync(id);
             if (id != anuncio.Id)
@@ -275,6 +326,13 @@ namespace Wallaboo.Controllers
             }
             try
             {
+                pago.total= ViewBag.Total;
+                pago.AnuncioID = anuncio.Id;
+                pago.TenantId = anuncio.TenantId;
+                pago.FechaPago = ViewBag.FechaPago;
+                _context.Add(pago);
+                await _context.SaveChangesAsync();
+
                 anuncio.Pagado = 1;
                 anuncio.Activo = 1;
                 _context.Update(anuncio);
