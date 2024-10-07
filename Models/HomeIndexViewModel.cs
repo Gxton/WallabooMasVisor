@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Wallaboo.Entities;
 
 namespace Wallaboo.Models
@@ -53,5 +52,4 @@ namespace Wallaboo.Models
         }
     }
 }
-
 

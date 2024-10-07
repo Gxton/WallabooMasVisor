@@ -60,6 +60,7 @@ namespace Wallaboo.Controllers
             var model = new HomeIndexViewModel
             {
                 // Asigna las propiedades necesarias
+                ID = anuncio.Id,
                 Descripcion = anuncio.Descripcion,
                 FechaDesde = anuncio.FechaDesde,
                 FechaHasta = anuncio.FechaHasta,

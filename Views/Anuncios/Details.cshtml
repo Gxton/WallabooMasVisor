@@ -5,98 +5,98 @@
 }
 @if (User.Identity is not null && User.Identity.IsAuthenticated)
 {
-<h2>Detalles del Anuncio</h2>
+    <h2>Detalles del Anuncio</h2>
 
-<div>
-    <hr />
-    <div class="row">
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.Descripcion)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </div>
+    <div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.Descripcion)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.Descripcion)
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayName("Imagen")</strong>
-        </div>
-        <div class="col-sm-10">
-            @if (Model.ImagenesGuardadas != null && Model.ImagenesGuardadas.Any())
-            {
-                var imagePath = Model.ImagenesGuardadas.FirstOrDefault()?.Image1Path;
-                if (!string.IsNullOrEmpty(imagePath))
+            <div class="col-sm-2">
+                <strong>@Html.DisplayName("Imagen")</strong>
+            </div>
+            <div class="col-sm-10">
+                @if (Model.ImagenesGuardadas != null && Model.ImagenesGuardadas.Any())
                 {
-                    var relativePath = Url.Content("~/uploads/" + imagePath.Substring(imagePath.LastIndexOf("/") + 1));
-                    <img src="@relativePath" alt="Imagen del anuncio" style="width: 150px; height: 150px;" />
+                    var imagePath = Model.ImagenesGuardadas.FirstOrDefault()?.Image1Path;
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        var relativePath = Url.Content("~/uploads/" + imagePath.Substring(imagePath.LastIndexOf("/") + 1));
+                        <img src="@relativePath" alt="Imagen del anuncio" style="width: 150px; height: 150px;" />
+                    }
+                    else
+                    {
+                        <span>No hay imagen disponible</span>
+                    }
                 }
                 else
                 {
                     <span>No hay imagen disponible</span>
                 }
-            }
-            else
-            {
-                <span>No hay imagen disponible</span>
-            }
-        </div>
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.FechaDesde)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaDesde)
-        </div>
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.FechaDesde)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.FechaDesde)
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.FechaHasta)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaHasta)
-        </div>
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.FechaHasta)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.FechaHasta)
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.Precio)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </div>
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.Precio)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.Precio)
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.CantidadDias)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.CantidadDias)
-        </div>
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.CantidadDias)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.CantidadDias)
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.Activo)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.Activo)
-        </div>
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.Activo)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.Activo)
+            </div>
 
-        <div class="col-sm-2">
-            <strong>@Html.DisplayNameFor(model => model.Pagado)</strong>
-        </div>
-        <div class="col-sm-10">
-            @Html.DisplayFor(model => model.Pagado)
+            <div class="col-sm-2">
+                <strong>@Html.DisplayNameFor(model => model.Pagado)</strong>
+            </div>
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.Pagado)
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row mt-3">
-    <div class="col-md-6 text-center">
-        <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-secondary btn-fixed">Editar </a>
+    <div class="row mt-3">
+        <div class="col-md-6 text-center">
+            <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-secondary btn-fixed">Editar </a>
+        </div>
+        <div class="col-md-6 text-center">
+            <a asp-action="Index" class="btn btn-primary btn-fixed">Volver</a>
+        </div>
     </div>
-    <div class="col-md-6 text-center">
-        <a asp-action="Index" class="btn btn-primary btn-fixed">Volver</a>
-    </div>
-</div>
 
-    }
-    else
-    {
-<div class="text-center">
-    <h3>¡Inicia sesión para crear y visualizar anuncios!</h3>
-</div>
-    }
+}
+else
+{
+    <div class="text-center">
+        <h3>¡Inicia sesión para crear y visualizar anuncios!</h3>
+    </div>
+}
