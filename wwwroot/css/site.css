@@ -3,6 +3,7 @@ body {
     background-color: #f0f4f8; /* Color de fondo */
     color: #212529; /* Color de texto principal */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95rem; /* Reduce ligeramente el tamaño de la fuente */
     margin: 0;
     padding: 0;
 }
@@ -11,8 +12,9 @@ body {
 h1, h2, h3, h4, .card-title {
     color: #0056b3; /* Color de encabezados */
     font-weight: 600; /* Peso de fuente */
-    margin-bottom: 1rem; /* Espacio inferior */
+    margin-bottom: 0.5rem; /* Reduce el espacio inferior */
     text-align: center; /* Centrar texto */
+    font-size: 1.25rem; /* Reduce el tamaño de los títulos */
 }
 
 /* Hero Section */
@@ -47,7 +49,7 @@ h1, h2, h3, h4, .card-title {
 
 /* Estilos para formularios */
 .form-group {
-    margin-bottom: 1rem; /* Espacio inferior entre grupos */
+    margin-bottom: 0.75rem; /* Reduce el espacio inferior entre grupos */
 }
 
 .form-control {
@@ -57,7 +59,7 @@ h1, h2, h3, h4, .card-title {
 /* Estilos para botones */
 .btn {
     border-radius: 0.25rem; /* Bordes redondeados */
-    padding: 0.5rem 1rem; /* Espaciado interno */
+    padding: 0.4rem 0.8rem; /* Reducir el tamaño de los botones */
 }
 
 .btn-primary {
@@ -128,8 +130,6 @@ footer .link-info {
 }
 
 /* Asegura que los botones tengan el mismo tamaño y un pequeño espacio entre ellos */
-
-/* Asegura que los botones tengan el mismo tamaño y un pequeño espacio entre ellos */
 .btn-fixed {
     min-width: 100px;
     max-width: 100px;
@@ -161,6 +161,7 @@ footer .link-info {
     padding: 10px 5px; /* Espacio interno (padding) para los títulos */
     text-align: center; /* Alineación central de los títulos */
 }
+
 .table-container {
     display: flex;
     justify-content: center; /* Centra la tabla horizontalmente */
@@ -171,5 +172,16 @@ footer .link-info {
 .table {
     width: auto; /* Deja que la tabla tenga el ancho según su contenido */
     max-width: 90%; /* Limita el ancho máximo al 90% del ancho de la pantalla */
+    font-size: 0.9rem; /* Tamaño de texto ajustado para tablas */
 }
 
+/* Media query para pantallas de resolución mediana */
+@media (min-width: 1280px) and (max-width: 1600px) {
+    .container {
+        max-width: 1100px; /* Ajustar el ancho máximo del contenedor */
+    }
+
+    .card-title {
+        font-size: 1.1rem; /* Ajustar el tamaño del título de las tarjetas */
+    }
+}
