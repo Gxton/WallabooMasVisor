@@ -19,6 +19,7 @@
                     <th>@Html.DisplayName("Días Activo")</th>
                     <th>@Html.DisplayName("Activo")</th>
                     <th>@Html.DisplayName("Pagado")</th>
+                    <th>Imagenes</th> <!-- Nueva columna para las imágenes -->
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -28,12 +29,22 @@
                 {
                     <tr>
                         <td style="vertical-align: top;">@Html.DisplayFor(modelItem => item.Descripcion)</td>
-                        <td style="vertical-align: top;">@item.FechaDesde</td>
-                        <td style="vertical-align: top;">@item.FechaHasta</td>
+                        <td style="vertical-align: top;">@item.FechaDesde.ToString("g")</td>
+                        <td style="vertical-align: top;">@item.FechaHasta.ToString("g")</td>
                         <td style="vertical-align: top;">@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
                         <td style="vertical-align: top;">@item.CantidadDias</td>
                         <td style="vertical-align: top;">@(item.Activo == 1 ? "Sí" : "No")</td>
                         <td style="vertical-align: top;">@(item.Pagado == 1 ? "Sí" : "No")</td>
+                        <td style="vertical-align: top;">
+                            @foreach (var imagen in item.Imagenes)
+                            {
+                                if (!string.IsNullOrEmpty(imagen.Image1Path))
+                                {
+                                    var imageUrl = Url.Content($"~/uploads/{item.TenantId}/{imagen.Image1Path}");
+                                    <img src="@imageUrl" alt="Imagen de anuncio" style="width:100px;height:auto;" />
+                                }
+                            }
+                        </td>
                         <td style="vertical-align: top;">
                             <div class="d-flex justify-content-between">
                                 <div class="col text-center">
@@ -114,144 +125,3 @@ else
         </div>
     </div>
 }
-
-
-
-
-
-@* @model IEnumerable<Wallaboo.Entities.Anuncio>
-
-@{
-    ViewData["Title"] = "Bienvenido a Wallaboo - Listado de Anuncios";
-}
-@if (User.Identity is not null && User.Identity.IsAuthenticated)
-{
-    <h2>Listado de Anuncios</h2>
-
-    <div class="table-container">
-        <table class="table table-bordered">
-            <thead class="table-light">
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
-                    <th>@Html.DisplayName("Imagen")</th> <!-- Nueva columna para las imágenes -->
-                    <th>@Html.DisplayName("Activo desde:")</th>
-                    <th>@Html.DisplayName("Activo hasta:")</th>
-                    <th>@Html.DisplayNameFor(model => model.Precio)</th>
-                    <th>@Html.DisplayName("Días Activo")</th>
-                    <th>@Html.DisplayName("Activo")</th>
-                    <th>@Html.DisplayName("Pagado")</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
-                        <td>
-                            @if (item.Imagenes != null && item.Imagenes.Any())
-                            {
-                                var imagePath = item.Imagenes.FirstOrDefault()?.Image1Path;
-                                if (!string.IsNullOrEmpty(imagePath))
-                                {
-                                    // Asegúrate de que la ruta sea relativa a la raíz de tu aplicación
-                                    var relativePath = Url.Content("~/uploads/" + imagePath.Substring(imagePath.LastIndexOf("/") + 1));
-
-                                    <img src="@Url.Content(relativePath)" alt="Imagen del anuncio" style="width: 100px; height: 100px;" />
-                                }
-                                else
-                                {
-                                    <span>No hay imagen disponible</span>
-                                }
-                            }
-                            else
-                            {
-                                <span>No hay imagen disponible</span>
-                            }
-                        </td>
-                        <td>@item.FechaDesde</td>
-                        <td>@item.FechaHasta</td>
-                        <td>@item.Precio.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</td>
-                        <td>@item.CantidadDias</td>
-                        <td>@(item.Activo == 1 ? "Sí" : "No")</td>
-                        <td>@(item.Pagado == 1 ? "Sí" : "No")</td>
-                        <td>
-                            <div class="d-flex justify-content-between">
-                                <div class="col text-center">
-                                    @if ((item.Pagado == 0) &&(item.FechaDesde >= DateTime.Now))
-                                    {
-                                        <a asp-action="Pay" asp-route-id="@item.Id" class="btn btn-success btn-fixed" title="Pagar"><i class="fas fa-money-bill-wave"></i> Pagar</a>
-                                    }
-                                </div>
-                                <div class="col text-center">
-                                    @if ((item.Pagado == 0))
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-fixed" title="Editar"><i class="fas fa-edit"></i> Editar</a>
-                                    }
-                                </div>
-                                <div class="col text-center">
-                                    @if (item.Pagado == 0)
-                                    {
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-fixed" title="Eliminar"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                                    }
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <p>
-        <a asp-action="Create" class="btn btn-primary btn-fixed">Nuevo</a>
-    </p>
-}
-else
-{
-    <div class="text-center mb-4">
-        <h1 class="display-4">Bienvenido a Wallaboo</h1>
-        <p class="lead">La herramienta perfecta para negocios y profesionales: publica anuncios y permite que tus clientes accedan a ellas fácilmente escaneando un código QR.</p>
-    </div>
-    <div class="container mt-5">
-        <div class="d-flex justify-content-center">
-            <div class="card-group">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col">
-                        <div class="card">
-                            <img src="~/imagenes/img_qr.jpg" class="card-img-top" alt="Gestión de Ofertas"> <!-- Reemplaza con la URL de tu imagen -->
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Gestiona tus Ofertas</h5>
-                                <p class="card-text">Crea y administra tus anuncios fácilmente para atraer a más clientes.</p>
-                                <a class="btn btn-custom w-100" asp-controller="usuarios" asp-action="login">Ingresar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card">
-                            <img src="~/imagenes/img_qr.jpg" class="card-img-top" alt="Generación de Códigos QR"> <!-- Reemplaza con la URL de tu imagen -->
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Genera Códigos QR</h5>
-                                <p class="card-text">Facilita a tus clientes el acceso a tus anuncios escaneando un código QR único.</p>
-                                <a class="btn btn-custom w-100" asp-controller="usuarios" asp-action="registro">Registrate!</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card">
-                            <img src="~/imagenes/img_qr.jpg" class="card-img-top" alt="Soporte al Cliente"> <!-- Reemplaza con la URL de tu imagen -->
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Soporte al Cliente</h5>
-                                <p class="card-text">Estamos aquí para ayudarte. Contáctanos si tienes preguntas sobre nuestras funciones.</p>
-                                <a href="~/Support" class="btn btn-custom w-100">Contáctanos</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-} *@
-
-

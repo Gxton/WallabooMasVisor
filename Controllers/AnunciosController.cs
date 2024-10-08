@@ -11,6 +11,9 @@ using Wallaboo.Entities;
 using Wallaboo.Interfaces;
 using Wallaboo.Models;
 using Wallaboo.Services;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats;
 using Microsoft.AspNetCore.Http;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -33,11 +36,10 @@ namespace Wallaboo.Controllers
             return View(await _context.Anuncios
                 .Include(a => a.Imagenes)
                 .OrderBy(a => a.FechaHasta).ToListAsync());
-            //var fechita = DateTime.Now.AddDays(7);
-            //return View(await _context.Anuncios.Where(a => a.FechaHasta <= fechita)
-            //    .OrderBy(a => a.FechaHasta).ToListAsync());
         }
 
+        // GET: Anuncios/Details/5
+        // GET: Anuncios/Details/5
         // GET: Anuncios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -68,11 +70,24 @@ namespace Wallaboo.Controllers
                 CantidadDias = anuncio.CantidadDias,
                 Activo = anuncio.Activo,
                 Pagado = anuncio.Pagado,
-                ImagenesGuardadas = anuncio.Imagenes // Asigna las imágenes
+                ImagenesGuardadas = anuncio.Imagenes // Asigna las imágenes directamente
             };
+
+            // Crear una lista de URLs de imágenes
+            var imagenUrls = anuncio.Imagenes
+                .Where(imagen => !string.IsNullOrEmpty(imagen.Image1Path) && !string.IsNullOrEmpty(imagen.TenantId)) // Filtra imágenes válidas
+                .Select(imagen =>
+                    Url.Content($"~/uploads/{imagen.TenantId}/{System.IO.Path.GetFileName(imagen.Image1Path)}"))
+                .ToList();
+
+            // Asigna las URLs a una nueva propiedad en el modelo de vista
+            ViewBag.ImagenUrls = imagenUrls;
 
             return View(model); // Pasa el modelo a la vista
         }
+
+
+
 
 
         // GET: Anuncios/Create
@@ -108,8 +123,10 @@ namespace Wallaboo.Controllers
                 // Manejo de imágenes
                 if (imagenes != null && imagenes.Count > 0)
                 {
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                    // Crear la ruta de carga basada en el TenantId
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", anuncio.TenantId);
 
+                    // Crear el directorio si no existe
                     if (!Directory.Exists(uploadPath))
                     {
                         Directory.CreateDirectory(uploadPath);
@@ -119,13 +136,26 @@ namespace Wallaboo.Controllers
                     {
                         if (file.Length > 0)
                         {
+                            // Generar un nombre único para el archivo
                             var fileName = $"{Guid.NewGuid()}_{file.FileName}";
                             var filePath = Path.Combine(uploadPath, fileName);
 
-                            // Guarda el archivo
-                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            // Redimensionar y recortar la imagen a cuadrada
+                            using (var image = Image.Load(file.OpenReadStream()))
                             {
-                                await file.CopyToAsync(stream);
+                                // Calcular el tamaño del nuevo lado
+                                var size = Math.Max(image.Width, image.Height);
+
+                                // Redimensionar y recortar la imagen
+                                image.Mutate(x => x
+                                    .Resize(new ResizeOptions
+                                    {
+                                        Size = new Size(size, size),
+                                        Mode = ResizeMode.Crop
+                                    }));
+
+                                // Guarda la imagen en la ruta especificada
+                                await image.SaveAsync(filePath); // Guardar imagen procesada
                             }
 
                             // Crea la entidad Imagen
@@ -133,7 +163,7 @@ namespace Wallaboo.Controllers
                             {
                                 AnuncioId = anuncio.Id,
                                 TenantId = anuncio.TenantId,
-                                Image1Path = fileName // Solo guarda el nombre
+                                Image1Path = Path.Combine("uploads", anuncio.TenantId, fileName) // Guarda la ruta relativa
                             };
 
                             _context.Imagenes.Add(imagen);
@@ -150,6 +180,7 @@ namespace Wallaboo.Controllers
                 return View();
             }
         }
+
 
         // GET: Anuncios/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -169,13 +200,13 @@ namespace Wallaboo.Controllers
                 return NotFound();
             }
 
+            // Inicializa la colección de imágenes si es nula
+            anuncio.Imagenes ??= new List<Imagen>();
+
             return View(anuncio);
         }
 
-
         // POST: Anuncios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Descripcion,TenantId,FechaDesde,FechaHasta,Precio,CantidadDias,Activo,Pagado")] Anuncio anuncio, IFormFileCollection imagenes)
@@ -189,6 +220,7 @@ namespace Wallaboo.Controllers
 
             if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
             {
+                // Lógica para calcular días y asignar propiedades
                 DateTime fechad = Convert.ToDateTime(anuncio.FechaDesde);
                 DateTime fechah = Convert.ToDateTime(anuncio.FechaHasta);
                 TimeSpan diff = fechah - fechad;
@@ -201,8 +233,10 @@ namespace Wallaboo.Controllers
                 // Manejo de imágenes
                 if (imagenes != null && imagenes.Count > 0)
                 {
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                    // Crear la ruta de carga basada en el TenantId
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", anuncio.TenantId);
 
+                    // Crear el directorio si no existe
                     if (!Directory.Exists(uploadPath))
                     {
                         Directory.CreateDirectory(uploadPath);
@@ -212,20 +246,46 @@ namespace Wallaboo.Controllers
                     var existingImages = await _context.Imagenes.Where(i => i.AnuncioId == anuncio.Id).ToListAsync();
                     if (existingImages.Any())
                     {
+                        // Elimina las imágenes del sistema de archivos
+                        foreach (var img in existingImages)
+                        {
+                            if (!string.IsNullOrEmpty(img.Image1Path)) // Verifica que la ruta no sea nula
+                            {
+                                var imgPath = Path.Combine(uploadPath, Path.GetFileName(img.Image1Path));
+                                if (System.IO.File.Exists(imgPath))
+                                {
+                                    System.IO.File.Delete(imgPath);
+                                }
+                            }
+                        }
                         _context.Imagenes.RemoveRange(existingImages);
                     }
 
+                    // Agrega las nuevas imágenes
                     foreach (var file in imagenes)
                     {
                         if (file.Length > 0)
                         {
+                            // Generar un nombre único para el archivo
                             var fileName = $"{Guid.NewGuid()}_{file.FileName}";
                             var filePath = Path.Combine(uploadPath, fileName);
 
-                            // Guarda el archivo
-                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            // Redimensionar y recortar la imagen a cuadrada
+                            using (var image = Image.Load(file.OpenReadStream()))
                             {
-                                await file.CopyToAsync(stream);
+                                // Calcular el tamaño del nuevo lado
+                                var size = Math.Max(image.Width, image.Height);
+
+                                // Redimensionar y recortar la imagen
+                                image.Mutate(x => x
+                                    .Resize(new ResizeOptions
+                                    {
+                                        Size = new Size(size, size),
+                                        Mode = ResizeMode.Crop
+                                    }));
+
+                                // Guarda la imagen en la ruta especificada
+                                await image.SaveAsync(filePath); // Guardar imagen procesada
                             }
 
                             // Crea la entidad Imagen
@@ -233,7 +293,7 @@ namespace Wallaboo.Controllers
                             {
                                 AnuncioId = anuncio.Id,
                                 TenantId = anuncio.TenantId,
-                                Image1Path = fileName // Solo guarda el nombre
+                                Image1Path = Path.Combine("uploads", anuncio.TenantId, fileName) // Guarda la ruta relativa
                             };
 
                             _context.Imagenes.Add(imagen);
@@ -251,6 +311,9 @@ namespace Wallaboo.Controllers
                 return View(anuncio); // Devuelve el anuncio para que el usuario pueda corregirlo
             }
         }
+
+
+
 
         // GET: Anuncios/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -278,6 +341,31 @@ namespace Wallaboo.Controllers
             var anuncio = await _context.Anuncios.FindAsync(id);
             if (anuncio != null)
             {
+                // Elimina las imágenes asociadas al anuncio
+                var imagenes = await _context.Imagenes.Where(i => i.AnuncioId == anuncio.Id).ToListAsync();
+                if (imagenes.Any())
+                {
+                    var baseUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                    var tenantUploadPath = Path.Combine(baseUploadPath, anuncio.TenantId);
+
+                    // Elimina los archivos de imagen del sistema de archivos
+                    foreach (var imagen in imagenes)
+                    {
+                        if (!string.IsNullOrEmpty(imagen.Image1Path)) // Verifica que Image1Path no sea nulo o vacío
+                        {
+                            var filePath = Path.Combine(tenantUploadPath, imagen.Image1Path);
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+                        }
+                    }
+
+                    // Elimina las imágenes de la base de datos
+                    _context.Imagenes.RemoveRange(imagenes);
+                }
+
+                // Elimina el anuncio
                 _context.Anuncios.Remove(anuncio);
             }
 
@@ -327,7 +415,7 @@ namespace Wallaboo.Controllers
             }
             try
             {
-                pago.total= ViewBag.Total;
+                pago.total = ViewBag.Total;
                 pago.AnuncioID = anuncio.Id;
                 pago.TenantId = anuncio.TenantId;
                 pago.FechaPago = ViewBag.FechaPago;
@@ -376,75 +464,6 @@ namespace Wallaboo.Controllers
                 return BadRequest($"Error al obtener el customer_id: {ex.Message}");
             }
         }
-        //[HttpPost("create")]
-    //    [HttpPost] //CreatePayment//
-    //    public async Task<IActionResult> Pay([FromForm] decimal amount, [FromForm] string description, [FromForm] string cardNumber, [FromForm] int expirationMonth, [FromForm] int expirationYear, [FromForm] string cardholderName, [FromForm] string securityCode, [FromForm] string email,
-    //            int id, Anuncio anuncio, Pago pago)
-    //    {
-    //        try
-    //        {
-    //            // Generar el cardToken
-    //            var cardToken = await _mercadoPagoService.GenerateCardTokenAsync(cardNumber, expirationMonth, expirationYear, cardholderName, securityCode);
-
-    //            // Obtener el customerId del email proporcionado
-    //            var customerId = await _mercadoPagoService.GetCustomerIdByEmailAsync(email);
-
-    //            if (customerId == null)
-    //            {
-    //                // Si no se encuentra el customerId, crear un nuevo cliente en MercadoPago
-    //                customerId = await _mercadoPagoService.CreateCustomerAsync(email);
-    //            }
-
-    //            // Asociar la tarjeta al cliente (opcional, dependiendo de la lógica de tu aplicación)
-    //            // var cardId = await _mercadoPagoService.CreateCardAsync(customerId, cardToken);
-
-    //            // Crear el pago utilizando los datos del formulario y el cardToken generado
-    //            var payment = await _mercadoPagoService.CreatePaymentAsync(amount, description, customerId, cardToken, securityCode, email);
-
-    //            //Insertado mio
-    //            if (id != anuncio.Id)
-    //            {
-    //                return NotFound();
-    //            }
-    //            try
-    //            {
-    //                //modifico el estado de activo y pagad del anuncio
-    //                anuncio.Pagado = 1;
-    //                anuncio.Activo = 1;
-    //                _context.Update(anuncio);
-    //                await _context.SaveChangesAsync();
-
-    //                //ingreso el pago en la tabla de pagos
-    //                pago.total = amount;
-    //                pago.AnuncioID = anuncio.Id;
-    //                pago.TenantId = anuncio.TenantId;
-    //                pago.FechaPago = DateTime.Now;
-
-    //                _context.Add(pago);
-    //                await _context.SaveChangesAsync();
-
-    //            }
-    //            catch (DbUpdateConcurrencyException)
-    //            {
-    //                if (!AnuncioExists(anuncio.Id))
-    //                {
-    //                    return NotFound();
-    //                }
-    //                else
-    //                {
-    //                    throw;
-    //                }
-    //            }
-    //            return RedirectToAction(nameof(Index));
-    //            //fin insertado mio
-
-    //            //return Ok(payment); //de MP original
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return StatusCode(500, $"Error al procesar el pago: {ex.Message}");
-    //        }
-    //    }
     }
 
 }
