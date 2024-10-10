@@ -100,7 +100,17 @@
                     </div>
                     <div class="col-md-8">
                         <input type="file" id="Imagenes" name="Imagenes" class="form-control" accept="image/*" multiple />
-                        <small class="form-text text-muted">Puedes subir múltiples imágenes.</small>
+                        @* <small class="form-text text-muted">Puedes subir múltiples imágenes.</small> *@
+                    </div>
+                </div>
+
+                <!-- Área para mostrar la vista previa de la nueva imagen -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>Vista previa:</label>
+                    </div>
+                    <div class="col-md-8" id="preview-container">
+                        <!-- Aquí se mostrará la vista previa de la imagen -->
                     </div>
                 </div>
 
@@ -125,4 +135,25 @@ else
 
 @section Scripts {
     @Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <script>
+        // Función para mostrar la vista previa de la imagen seleccionada
+        document.getElementById("Imagenes").addEventListener("change", function (event) {
+            const previewContainer = document.getElementById("preview-container");
+            previewContainer.innerHTML = ""; // Limpiar contenido anterior
+
+            const files = event.target.files; // Obtener archivos seleccionados
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result; // Establecer la fuente de la imagen
+                    img.style.width = "150px"; // Ancho de la imagen
+                    img.style.height = "150px"; // Alto de la imagen
+                    previewContainer.appendChild(img); // Agregar la imagen al contenedor de vista previa
+                };
+                reader.readAsDataURL(file); // Leer la imagen como URL
+            }
+        });
+    </script>
 }

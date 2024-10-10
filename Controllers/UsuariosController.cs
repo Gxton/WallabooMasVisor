@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Wallaboo.Data;
 using Wallaboo.Models;
 using Wallaboo.Services;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Wallaboo.Controllers
@@ -240,6 +241,7 @@ namespace Wallaboo.Controllers
             return _context.Usuarios.Any(e => e.TenantId == tenantId);
         }
 
+
         public IActionResult GeneratePdf(string id)
         {
             var usuario = _context.Usuarios.Find(id);
@@ -264,13 +266,13 @@ namespace Wallaboo.Controllers
                 XFont textFont = new XFont("Arial", 28, XFontStyle.Regular);
                 XFont footerFont = new XFont("Arial", 12, XFontStyle.Regular);
 
-                // Margenes
+                // Márgenes
                 double margin = 40;
                 double contentWidth = page.Width - margin * 2;
                 double yPosition = margin;
 
                 // Dibuja el marco alrededor de todo el contenido del PDF
-                XPen borderPen = new XPen(XColors.Black, 2); // Define el color y el grosor del marco
+                XPen borderPen = new XPen(XColors.Black, 2);
                 gfx.DrawRectangle(borderPen, margin / 2, margin / 2, page.Width - margin, page.Height - margin);
 
                 // Título
@@ -289,23 +291,31 @@ namespace Wallaboo.Controllers
                 gfx.DrawLine(XPens.Black, margin, yPosition, page.Width - margin, yPosition);
                 yPosition += 30;
 
-                // Calcular el espacio disponible entre las dos líneas para centrar el QR
-                double qrSize = 400;
-                double spaceAboveQR = 100;  // Espacio adicional encima del QR
-                double spaceBelowQR = page.Height - yPosition - qrSize - 100 - 60; // Espacio antes de la línea inferior
-                yPosition += spaceAboveQR;
-
-                // Agregar el código QR en el centro si está disponible
+                // Generar el código QR solo si existe el QRURL y no es vacío
                 if (usuario.QRURL != null && usuario.QRURL.Length > 0)
                 {
-                    XImage qrImage = XImage.FromStream(() => new MemoryStream(usuario.QRURL));
-                    gfx.DrawImage(qrImage, (page.Width - qrSize) / 2, yPosition, qrSize, qrSize);
+                    // Convertir el byte[] a una imagen
+                    using (var ms = new MemoryStream(usuario.QRURL))
+                    {
+                        using (var qrImage = System.Drawing.Image.FromStream(ms))
+                        {
+                            using (MemoryStream imageStream = new MemoryStream())
+                            {
+                                qrImage.Save(imageStream, System.Drawing.Imaging.ImageFormat.Png);
+                                imageStream.Position = 0; // Reiniciar el stream
+
+                                XImage xImage = XImage.FromStream(() => imageStream);
+                                double qrSize = 300; // Ajustar el tamaño del código QR
+                                gfx.DrawImage(xImage, (page.Width - qrSize) / 2, yPosition, qrSize, qrSize);
+                            }
+                        }
+                    }
                 }
 
                 // Pie de página
-                gfx.DrawLine(XPens.Black, margin, page.Height - 50, page.Width - margin, page.Height - 50); // Línea horizontal
+                gfx.DrawLine(XPens.Black, margin, page.Height - 50, page.Width - margin, page.Height - 50);
                 gfx.DrawString("www.wallaboo.com - Marketing de Ofertas", footerFont, XBrushes.Gray,
-                    new XRect(margin, page.Height - 40, contentWidth, 20), XStringFormats.Center); // Leyenda en letras chicas
+                    new XRect(margin, page.Height - 40, contentWidth, 20), XStringFormats.Center);
 
                 // Guardar el documento en un MemoryStream
                 using (var memoryStream = new MemoryStream())
@@ -322,7 +332,13 @@ namespace Wallaboo.Controllers
                 return StatusCode(500, $"Error generando el PDF: {ex.Message}");
             }
         }
+
+
+
+
+
+
     }
-    
 }
+
 
