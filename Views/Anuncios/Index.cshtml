@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Wallaboo.Entities.Anuncio>
+﻿@using System.IO;  <!-- Asegúrate de incluir esta línea -->
+@model IEnumerable<Wallaboo.Entities.Anuncio>
 
 @{
     ViewData["Title"] = "Bienvenido a Wallaboo - Listado de Anuncios";
@@ -40,7 +41,8 @@
                             {
                                 if (!string.IsNullOrEmpty(imagen.Image1Path))
                                 {
-                                    var imageUrl = Url.Content($"~/uploads/{item.TenantId}/{imagen.Image1Path}");
+                                    // Asegurarse de que imagePath contenga solo el nombre del archivo
+                                    var imageUrl = Url.Content($"~/uploads/{item.TenantId}/{System.IO.Path.GetFileName(imagen.Image1Path)}");
                                     <img src="@imageUrl" alt="Imagen de anuncio" style="width:100px;height:auto;" />
                                 }
                             }

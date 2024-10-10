@@ -32,14 +32,36 @@ namespace Wallaboo.Controllers
         // GET: Anuncios
         public async Task<IActionResult> Index()
         {
-            //ver de eliminar desde la BD con un trigger cuando cumplen 15 dias de vencidas
-            return View(await _context.Anuncios
-                .Include(a => a.Imagenes)
-                .OrderBy(a => a.FechaHasta).ToListAsync());
+            // Cargar todos los anuncios con sus imágenes asociadas
+            var anunciosConImagenes = await _context.Anuncios
+                .Include(a => a.Imagenes) // Asegurarse de incluir las imágenes
+                .OrderBy(a => a.FechaHasta)
+                .ToListAsync();
+
+            // Validar las rutas de las imágenes y asegurarse de que existan en el sistema de archivos
+            foreach (var anuncio in anunciosConImagenes)
+            {
+                if (anuncio.Imagenes != null && anuncio.Imagenes.Any())
+                {
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", anuncio.TenantId);
+
+                    foreach (var imagen in anuncio.Imagenes)
+                    {
+                        // Verifica si la imagen tiene una ruta y si existe en el sistema de archivos
+                        var imagenPath = Path.Combine(uploadPath, Path.GetFileName(imagen.Image1Path));
+                        if (!System.IO.File.Exists(imagenPath))
+                        {
+                            // Si no existe la imagen, podrías establecer una imagen por defecto o manejar el error
+                            imagen.Image1Path = "/uploads/default-image.png"; // Imagen por defecto
+                        }
+                    }
+                }
+            }
+
+            return View(anunciosConImagenes);
         }
 
-        // GET: Anuncios/Details/5
-        // GET: Anuncios/Details/5
+
         // GET: Anuncios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -86,10 +108,6 @@ namespace Wallaboo.Controllers
             return View(model); // Pasa el modelo a la vista
         }
 
-
-
-
-
         // GET: Anuncios/Create
         public IActionResult Create()
         {
@@ -117,8 +135,9 @@ namespace Wallaboo.Controllers
                 anuncio.Activo = 0;
                 anuncio.Pagado = 0;
 
+                // Guardar el anuncio antes de las imágenes
                 _context.Add(anuncio);
-                await _context.SaveChangesAsync(); // Guarda el anuncio primero
+                await _context.SaveChangesAsync(); // Guarda el anuncio primero para obtener el Id
 
                 // Manejo de imágenes
                 if (imagenes != null && imagenes.Count > 0)
@@ -158,7 +177,7 @@ namespace Wallaboo.Controllers
                                 await image.SaveAsync(filePath); // Guardar imagen procesada
                             }
 
-                            // Crea la entidad Imagen
+                            // Crea la entidad Imagen con la ruta relativa correcta
                             var imagen = new Imagen
                             {
                                 AnuncioId = anuncio.Id,
@@ -169,6 +188,7 @@ namespace Wallaboo.Controllers
                             _context.Imagenes.Add(imagen);
                         }
                     }
+
                     await _context.SaveChangesAsync(); // Guarda las imágenes
                 }
 
@@ -180,6 +200,7 @@ namespace Wallaboo.Controllers
                 return View();
             }
         }
+
 
 
         // GET: Anuncios/Edit/5
@@ -266,9 +287,9 @@ namespace Wallaboo.Controllers
                     {
                         if (file.Length > 0)
                         {
-                            // Generar un nombre único para el archivo
-                            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-                            var filePath = Path.Combine(uploadPath, fileName);
+                            // Usar el nombre original del archivo
+                            var originalFileName = Path.GetFileName(file.FileName);
+                            var filePath = Path.Combine(uploadPath, originalFileName); // Ruta con el nombre original
 
                             // Redimensionar y recortar la imagen a cuadrada
                             using (var image = Image.Load(file.OpenReadStream()))
@@ -293,7 +314,7 @@ namespace Wallaboo.Controllers
                             {
                                 AnuncioId = anuncio.Id,
                                 TenantId = anuncio.TenantId,
-                                Image1Path = Path.Combine("uploads", anuncio.TenantId, fileName) // Guarda la ruta relativa
+                                Image1Path = Path.Combine("uploads", anuncio.TenantId, originalFileName) // Guarda la ruta relativa con el nombre original
                             };
 
                             _context.Imagenes.Add(imagen);
@@ -311,6 +332,7 @@ namespace Wallaboo.Controllers
                 return View(anuncio); // Devuelve el anuncio para que el usuario pueda corregirlo
             }
         }
+
 
 
 
