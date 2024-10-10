@@ -72,14 +72,14 @@
                     <strong>@Html.DisplayNameFor(model => model.Activo)</strong>
                 </div>
                 <div class="col-sm-10">
-                @Html.DisplayFor(model => model.Activo)
+                @(Model.Activo == 1 ? "Sí" : "No")
                 </div>
 
                 <div class="col-sm-2">
                     <strong>@Html.DisplayNameFor(model => model.Pagado)</strong>
                 </div>
                 <div class="col-sm-10">
-                @Html.DisplayFor(model => model.Pagado)
+                @(Model.Pagado == 1 ? "Sí" : "No")
                 </div>
             </div>
         </div>
