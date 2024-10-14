@@ -20,61 +20,60 @@
                 <input type="hidden" asp-for="TenantId" />
 
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label asp-for="Descripcion" class="form-label"></label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         @Html.TextArea("Descripcion", Model.Descripcion, new { @class = "form-control" })
                         <span asp-validation-for="Descripcion" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label asp-for="FechaDesde" class="form-label"></label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         <input asp-for="FechaDesde" class="form-control" type="datetime-local" id="FechaDesde" />
                         <span asp-validation-for="FechaDesde" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label asp-for="FechaHasta" class="form-label"></label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         <input asp-for="FechaHasta" class="form-control" type="datetime-local" id="FechaHasta" />
                         <span asp-validation-for="FechaHasta" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label asp-for="Precio" class="form-label">$:</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         <input asp-for="Precio" class="form-control" />
                         <span asp-validation-for="Precio" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label asp-for="CantidadDias" class="form-label"></label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         <input asp-for="CantidadDias" class="form-control" readonly="readonly" />
                         <span asp-validation-for="CantidadDias" class="text-danger"></span>
                     </div>
                 </div>
 
-                <!-- Campo para mostrar la imagen actual -->
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label>Imagen actual:</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         @if (Model.Imagenes != null && Model.Imagenes.Any())
                         {
                             foreach (var imagen in Model.Imagenes)
@@ -83,7 +82,6 @@
                                 var relativePath = Url.Content($"~/uploads/{imagen.TenantId}/{fileName}");
                                 <div>
                                     <img src="@relativePath" alt="Imagen del anuncio" style="width: 150px; height: 150px;" />
-                                    <!-- Agregar un campo oculto para almacenar la ruta de la imagen actual -->
                                     <input type="hidden" name="ImagenActual" value="@imagen.Image1Path" />
                                 </div>
                             }
@@ -95,32 +93,30 @@
                     </div>
                 </div>
 
-                <!-- Campo para subir nuevas imágenes -->
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label for="Imagenes" class="form-label">Nueva imagen:</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 text-start">
                         <input type="file" id="Imagenes" name="Imagenes" class="form-control" accept="image/*" multiple />
                     </div>
                 </div>
 
-                <!-- Área para mostrar la vista previa de la nueva imagen -->
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-end">
                         <label>Vista previa:</label>
                     </div>
-                    <div class="col-md-8" id="preview-container">
+                    <div class="col-md-8 text-start" id="preview-container">
                         <!-- Aquí se mostrará la vista previa de la imagen -->
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-4 text-center">
-                        <input type="submit" value="Guardar" class="btn btn-success w-100 btn-fixed" />
+                        <input type="submit" value="Guardar" class="btn btn-success w-100" />
                     </div>
                     <div class="col-md-4 text-center">
-                        <a asp-action="Index" class="btn btn-primary w-100 btn-fixed">Cancelar</a>
+                        <a asp-action="Index" class="btn btn-primary w-100">Cancelar</a>
                     </div>
                 </div>
             </form>
@@ -137,36 +133,29 @@ else
 @section Scripts {
     @Html.RenderPartialAsync("_ValidationScriptsPartial");
     <script>
-        // Obtener la fecha y hora actual del servidor en formato YYYY-MM-DDTHH:MM
-        const now = new Date('@ViewBag.CurrentDateTime.ToString("yyyy-MM-ddTHH:mm")'); // Formato requerido para datetime-local
-
-        // Asignar la fecha y hora mínima a los inputs de datetime-local
+        const now = new Date('@ViewBag.CurrentDateTime.ToString("yyyy-MM-ddTHH:mm")');
         document.getElementById('FechaDesde').setAttribute('min', now.toISOString().slice(0, 16));
         document.getElementById('FechaHasta').setAttribute('min', now.toISOString().slice(0, 16));
 
-        // Validar que la fecha y hora de finalización no sea anterior a la de inicio
         document.getElementById('FechaDesde').addEventListener('change', function () {
             document.getElementById('FechaHasta').setAttribute('min', this.value);
         });
 
-        // Vista previa de la nueva imagen
         document.getElementById('Imagenes').addEventListener('change', function (event) {
             const previewContainer = document.getElementById('preview-container');
-            previewContainer.innerHTML = ''; // Limpiar cualquier contenido anterior
+            previewContainer.innerHTML = '';
 
             Array.from(event.target.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    img.style.width = '150px'; // Ancho de la vista previa
-                    img.style.height = '150px'; // Alto de la vista previa
+                    img.style.width = '150px';
+                    img.style.height = '150px';
                     previewContainer.appendChild(img);
                 }
                 reader.readAsDataURL(file);
             });
         });
     </script>
-}
-
 }

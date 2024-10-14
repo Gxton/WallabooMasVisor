@@ -6,22 +6,24 @@
 
 @if (User.Identity is not null && User.Identity.IsAuthenticated)
 {
-    <h2>Detalles del Anuncio</h2>
+    <h2 class="text-center">Detalles del Anuncio</h2>
+    <hr />
 
-    <div>
-        <hr />
-        <div class="row">
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.Descripcion)</strong>
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Descripción:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @Html.DisplayFor(model => model.Descripcion)
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayName("Imágenes")</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Imágenes:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @if (Model.ImagenesGuardadas != null && Model.ImagenesGuardadas.Any())
                 {
                     foreach (var imagen in Model.ImagenesGuardadas)
@@ -36,61 +38,72 @@
                 }
                 else
                 {
-                    // Mostrar la imagen predeterminada cuando no hay imágenes disponibles
                     <img src="~/imagenes/NoFoto.png" alt="No hay imagen disponible" style="width: 150px; height: 150px; margin-right: 10px;" />
                 }
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.FechaDesde)</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Fecha Desde:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @Html.DisplayFor(model => model.FechaDesde)
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.FechaHasta)</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Fecha Hasta:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @Html.DisplayFor(model => model.FechaHasta)
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.Precio)</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Precio:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @Html.DisplayFor(model => model.Precio)
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.CantidadDias)</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Cantidad Días:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @Html.DisplayFor(model => model.CantidadDias)
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.Activo)</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Activo:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @(Model.Activo == 1 ? "Sí" : "No")
             </div>
+        </div>
 
-            <div class="col-sm-2">
-                <strong>@Html.DisplayNameFor(model => model.Pagado)</strong>
+        <div class="row mb-3">
+            <div class="col-sm-3 text-end">
+                <strong>Pagado:</strong>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-9 text-start">
                 @(Model.Pagado == 1 ? "Sí" : "No")
             </div>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-secondary w-100 btn-fixed">Editar</a>
-        </div>
-        <div class="col-md-4">
-            <a asp-action="Index" class="btn btn-primary w-100 btn-fixed">Volver</a>
+        <div class="row mt-3">
+            <div class="col-md-4 text-center">
+                <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-secondary w-100">Editar</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <a asp-action="Index" class="btn btn-primary w-100">Volver</a>
+            </div>
         </div>
     </div>
 }
