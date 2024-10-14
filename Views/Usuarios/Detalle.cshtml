@@ -6,96 +6,96 @@
     // Convertir el QR en base64 si existe
     string qrCodeBase64 = Model.QRURL != null ? "data:image/png;base64," + Convert.ToBase64String(Model.QRURL) : null;
 }
-    @if (User.Identity is not null && User.Identity.IsAuthenticated)
-    {
-<div class="container mt-5">
-    <div class="text-center mb-4">
-        <h1 class="display-5">Detalle del Negocio</h1>
-    </div>
-
-    <div class="card shadow-lg p-4 mb-5 bg-white rounded">
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Nombre Comercial:</div>
-            <div class="col-md-8">@Html.DisplayFor(model => model.NombreComercial)</div>
+@if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1 class="display-5">Detalle del Negocio</h1>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Dirección Comercial:</div>
-            <div class="col-md-8">@Html.DisplayFor(model => model.DireccionComercial)</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Teléfono Comercial:</div>
-            <div class="col-md-8">@Html.DisplayFor(model => model.TelefonoComercial)</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Descripción Comercial:</div>
-            <div class="col-md-8">@Html.DisplayFor(model => model.DescripcionComercial)</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Horario Comercial:</div>
-            <div class="col-md-8">@Html.DisplayFor(model => model.HorarioComercial)</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">País:</div>
-            <div class="col-md-8">
-                <p class="form-control-plaintext" id="PaisDescripcion"></p>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Provincia:</div>
-            <div class="col-md-8">
-                <p class="form-control-plaintext" id="ProvinciaDescripcion"></p>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4 font-weight-bold">Ciudad:</div>
-            <div class="col-md-8">
-                <p class="form-control-plaintext" id="CiudadDescripcion"></p>
-            </div>
-        </div>
-
-        <!-- Mostrar el código QR si está disponible -->
-        @if (!string.IsNullOrEmpty(qrCodeBase64))
-        {
+        <div class="card shadow-lg p-4 mb-5 bg-white rounded">
             <div class="row mb-3">
-                <div class="col-md-12 text-center font-weight-bold">Código QR:</div>
-                <div class="col-md-12 text-center">
-                    <img src="@qrCodeBase64" alt="Código QR del Negocio" class="img-fluid" style="max-width: 400px;" />
-                </div>
-    
-                <!-- Botones en columnas separadas -->
-                <div class="col-md-6 text-center mt-3">
-                    <a href="@qrCodeBase64" download="codigo-qr.png" class="btn btn-success">
-                        Descargar Código QR
-                    </a>
-                </div>
-                <div class="col-md-6 text-center mt-3">
-                    <button class="btn btn-secondary" onclick="location.href='@Url.Action("GeneratePdf", "usuarios", new { id = Model.TenantId })'">Hoja de Ofertas</button>
+                <div class="col-md-4 font-weight-bold">Nombre Comercial:</div>
+                <div class="col-md-8">@Html.DisplayFor(model => model.NombreComercial)</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">Dirección Comercial:</div>
+                <div class="col-md-8">@Html.DisplayFor(model => model.DireccionComercial)</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">Teléfono Comercial:</div>
+                <div class="col-md-8">@Html.DisplayFor(model => model.TelefonoComercial)</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">Descripción Comercial:</div>
+                <div class="col-md-8">@Html.DisplayFor(model => model.DescripcionComercial)</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">Horario Comercial:</div>
+                <div class="col-md-8">@Html.DisplayFor(model => model.HorarioComercial)</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">País:</div>
+                <div class="col-md-8">
+                    <p class="form-control-plaintext" id="PaisDescripcion">Cargando...</p>
                 </div>
             </div>
-        }
-        
-        <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <a asp-action="EditUsr" asp-route-id="@Model?.TenantId" class="btn btn-primary">Editar</a>
-                <a asp-action="Index" asp-controller="Anuncios" class="btn btn-secondary">Volver</a>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">Provincia:</div>
+                <div class="col-md-8">
+                    <p class="form-control-plaintext" id="ProvinciaDescripcion">Cargando...</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 font-weight-bold">Ciudad:</div>
+                <div class="col-md-8">
+                    <p class="form-control-plaintext" id="CiudadDescripcion">Cargando...</p>
+                </div>
+            </div>
+
+            <!-- Mostrar el código QR si está disponible -->
+            @if (!string.IsNullOrEmpty(qrCodeBase64))
+            {
+                <div class="row mb-3">
+                    <div class="col-md-12 text-center font-weight-bold">Código QR:</div>
+                    <div class="col-md-12 text-center">
+                        <img src="@qrCodeBase64" alt="Código QR del Negocio" class="img-fluid" style="max-width: 400px;" />
+                    </div>
+
+                    <!-- Botones en columnas separadas con ancho fijo -->
+                    <div class="col-md-6 text-center mt-3" style="width: 50%;">
+                        <a href="@qrCodeBase64" download="codigo-qr.png" class="btn btn-success w-100 btn-fixed">
+                            Descargar Código QR
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-center mt-3" style="width: 50%;">
+                        <button class="btn btn-secondary w-100 btn-fixed" onclick="location.href='@Url.Action("GeneratePdf", "usuarios", new { id = Model.TenantId })'">Hoja de Ofertas</button>
+                    </div>
+                </div>
+            }
+
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <a asp-action="EditUsr" asp-route-id="@Model?.TenantId" class="btn btn-primary btn-fixed">Editar</a>
+                    <a asp-action="Index" asp-controller="Anuncios" class="btn btn-secondary btn-fixed">Volver</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-    }
-    else
-    {
-<div class="text-center">
-    <h3>¡Inicia sesión para crear y visualizar anuncios!</h3>
-</div>
-    }
+}
+else
+{
+    <div class="text-center">
+        <h3>¡Inicia sesión para crear y visualizar anuncios!</h3>
+    </div>
+}
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -106,6 +106,9 @@
                     url: endpoint,
                     type: "GET",
                     data: { id: id },
+                    beforeSend: function () {
+                        $(elementId).text("Cargando...");
+                    },
                     success: function (data) {
                         $(elementId).text(data.descripcion);
                     },
@@ -137,7 +140,3 @@
         max-width: 800px;
     }
 </style>
-
-
-
-

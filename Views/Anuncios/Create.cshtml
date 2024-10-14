@@ -5,7 +5,7 @@
 }
 
 <div class="text-center mb-4">
-    <h2> Crea un nuevo anuncio</h2>
+    <h2>Nuevo anuncio</h2>
 </div>
 
 <div class="container d-flex justify-content-center">
@@ -25,12 +25,12 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label asp-for="FechaDesde" class="form-label"></label>
-                        <input asp-for="FechaDesde" class="form-control" />
+                        <input asp-for="FechaDesde" class="form-control" type="datetime-local" id="FechaDesde" />
                         <span asp-validation-for="FechaDesde" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
                         <label asp-for="FechaHasta" class="form-label"></label>
-                        <input asp-for="FechaHasta" class="form-control" />
+                        <input asp-for="FechaHasta" class="form-control" type="datetime-local" id="FechaHasta" />
                         <span asp-validation-for="FechaHasta" class="text-danger"></span>
                     </div>
                 </div>
@@ -48,12 +48,13 @@
                         <span class="text-danger" id="imagenError"></span>
                     </div>
                 </div>
+                <!-- Botones dispuestos en columnas con tamaños fijos -->
                 <div class="row mb-3">
-                    <div class="col-md-4">
-                        <input type="submit" value="Crear" class="btn btn-primary btn w-50" />
+                    <div class="col-md-4" style="width: 150px;">
+                        <input type="submit" value="Crear" class="btn btn-primary btn-fixed" />
                     </div>
-                    <div class="col-md-4">
-                        <a asp-action="Index" class="btn btn-primary btn w-50">Inicio</a>
+                    <div class="col-md-4" style="width: 150px;">
+                        <a asp-action="Index" class="btn btn-primary btn-fixed">Inicio</a>
                     </div>
                 </div>
             </form>
@@ -68,8 +69,22 @@
 </div>
 
 @section Scripts {
+    @* Renderización de scripts de validación *@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
 
+    <script>
+        // Obtener la fecha y hora actual en formato YYYY-MM-DDTHH:MM
+        const now = new Date().toISOString().slice(0, 16); // Formato requerido para datetime-local
+
+        // Asignar la fecha y hora mínima a los inputs de datetime-local
+        document.getElementById('FechaDesde').setAttribute('min', now);
+        document.getElementById('FechaHasta').setAttribute('min', now);
+
+        // Validar que la fecha y hora de finalización no sea anterior a la de inicio
+        document.getElementById('FechaDesde').addEventListener('change', function () {
+            document.getElementById('FechaHasta').setAttribute('min', this.value);
+        });
+    </script>
+}

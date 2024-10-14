@@ -224,8 +224,12 @@ namespace Wallaboo.Controllers
             // Inicializa la colección de imágenes si es nula
             anuncio.Imagenes ??= new List<Imagen>();
 
+            // Obtener la fecha y hora actual del servidor
+            ViewBag.CurrentDateTime = DateTime.Now;
+
             return View(anuncio);
         }
+
 
         // POST: Anuncios/Edit/5
         [HttpPost]
@@ -237,6 +241,7 @@ namespace Wallaboo.Controllers
                 return NotFound();
             }
 
+            // Validación de las fechas
             int result = DateTime.Compare(anuncio.FechaDesde, anuncio.FechaHasta);
 
             if ((result <= 0) && (anuncio.FechaDesde >= DateTime.Today))
@@ -328,10 +333,21 @@ namespace Wallaboo.Controllers
             }
             else
             {
+                // Si la validación falla, recargar las imágenes desde la base de datos
+                var anuncioFromDb = await _context.Anuncios
+                                                  .Include(a => a.Imagenes) // Incluir las imágenes asociadas
+                                                  .FirstOrDefaultAsync(a => a.Id == anuncio.Id);
+
+                if (anuncioFromDb != null)
+                {
+                    anuncio.Imagenes = anuncioFromDb.Imagenes; // Asignar las imágenes desde la base de datos
+                }
+
                 ViewBag.Msg = "La fecha de inicio y fin de la publicación deben ser posteriores a la fecha y hora actual.";
-                return View(anuncio); // Devuelve el anuncio para que el usuario pueda corregirlo
+                return View(anuncio); // Devuelve el anuncio con las imágenes recargadas para que el usuario pueda corregirlo
             }
         }
+
 
 
 

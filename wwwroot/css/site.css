@@ -1,29 +1,37 @@
 /* Estilos generales */
 body {
-    background-color: #f0f4f8; /* Color de fondo */
-    color: #212529; /* Color de texto principal */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 0.95rem; /* Reduce ligeramente el tamaño de la fuente */
+    background-color: #eaeaea; /* Fondo gris claro */
+    color: #5d5d5d; /* Color de texto gris */
+    font-family: 'Georgia', serif;
+    font-size: 1rem;
     margin: 0;
     padding: 0;
 }
 
 /* Estilos para los títulos */
 h1, h2, h3, h4, .card-title {
-    color: #0056b3; /* Color de encabezados */
-    font-weight: 600; /* Peso de fuente */
-    margin-bottom: 0.5rem; /* Reduce el espacio inferior */
-    text-align: center; /* Centrar texto */
-    font-size: 1.25rem; /* Reduce el tamaño de los títulos */
+    color: #8b4513; /* Color marrón */
+    font-weight: 700; /* Peso de fuente */
+    margin-bottom: 0.5rem; /* Espacio inferior */
+    text-align: left; /* Alinear a la izquierda */
+}
+
+    h1.display-4 {
+        font-size: 3rem; /* Tamaño de fuente personalizado */
+        text-transform: uppercase; /* Convertir el texto a mayúsculas */
+        letter-spacing: 1px; /* Espaciado entre letras */
+    }
+
+p.lead {
+    font-size: 1.25rem; /* Tamaño de fuente del párrafo */
+    color: #555; /* Cambiar el color del texto del párrafo */
 }
 
 /* Hero Section */
 .hero {
-    background-image: url('https://example.com/hero-image.jpg'); /* Reemplaza con tu imagen */
-    background-size: cover;
-    background-position: center;
+    background-color: #f4f4f4; /* Color de fondo suave */
     height: 100vh;
-    color: white;
+    color: #222; /* Texto oscuro */
 }
 
 /* Contenedor */
@@ -35,52 +43,55 @@ h1, h2, h3, h4, .card-title {
 
 /* Estilos para tarjetas */
 .card {
-    background-color: #ffffff; /* Fondo de tarjeta */
-    border: 1px solid #ced4da; /* Color de borde de las tarjetas */
-    border-radius: 0.5rem; /* Bordes redondeados */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra */
-    margin-bottom: 1.5rem; /* Espacio inferior entre tarjetas */
-    transition: transform 0.2s; /* Transición para efecto hover */
+    display: flex; /* Usar flexbox para la tarjeta */
+    flex-direction: column; /* Alinear los elementos verticalmente */
+    height: 100%; /* Hacer que las tarjetas ocupen el mismo espacio */
+    min-height: 350px; /* Establecer una altura mínima para todas las tarjetas */
 }
 
-    .card:hover {
-        transform: scale(1.05); /* Efecto de escala al pasar el ratón */
-    }
+.card-body {
+    flex-grow: 1; /* Permitir que el contenido ocupe el espacio restante */
+    display: flex; /* Usar flexbox para el cuerpo de la tarjeta */
+    flex-direction: column; /* Alinear los elementos verticalmente */
+    justify-content: space-between; /* Distribuir el espacio entre los elementos */
+}
+
 
 /* Estilos para formularios */
 .form-group {
-    margin-bottom: 0.75rem; /* Reduce el espacio inferior entre grupos */
+    margin-bottom: 1rem; /* Espacio inferior */
 }
 
 .form-control {
+    border: 1px solid #ccc; /* Borde suave */
     border-radius: 0.25rem; /* Bordes redondeados */
 }
 
 /* Estilos para botones */
 .btn {
     border-radius: 0.25rem; /* Bordes redondeados */
-    padding: 0.4rem 0.8rem; /* Reducir el tamaño de los botones */
+    padding: 0.4rem 0.8rem; /* Tamaño de botones */
+    font-size: 1rem; /* Tamaño de texto en botones */
 }
 
 .btn-primary {
-    background-color: #007bff; /* Color de fondo del botón */
+    background-color: #d2691e; /* Color marrón claro */
     color: white; /* Color del texto del botón */
 }
 
 .btn-success {
-    background-color: #28a745; /* Color de fondo del botón */
+    background-color: #6b8e23; /* Color verde oliva */
     color: white; /* Color del texto del botón */
 }
 
 .btn-custom {
-    background-color: #0056b3; /* Color uniforme para todos los botones */
-    border-color: #0056b3;
+    background-color: #8b4513; /* Color marrón */
+    border: none;
     color: white;
 }
 
     .btn-custom:hover {
-        background-color: #004085; /* Color al pasar el ratón */
-        border-color: #004085;
+        background-color: #7a4011; /* Color al pasar el ratón */
     }
 
 .btn:hover {
@@ -89,14 +100,14 @@ h1, h2, h3, h4, .card-title {
 
 /* Estilos para el pie de página */
 .footer {
-    background-color: #343a40; /* Color de fondo del pie de página */
+    background-color: #8b4513; /* Color de fondo del pie de página */
     color: white; /* Color de texto en el pie de página */
     padding: 1rem 0; /* Espaciado interno */
     text-align: center; /* Centrar contenido */
 }
 
 footer .link-info {
-    color: #007bff; /* Color del enlace */
+    color: #fff8dc; /* Color del enlace */
     text-decoration: none; /* Sin subrayado */
 }
 
@@ -107,6 +118,7 @@ footer .link-info {
 /* Ajustes para validar mensajes */
 .text-danger {
     font-size: 0.875rem; /* Tamaño de fuente para errores */
+    color: red; /* Color rojo para mensajes de error */
 }
 
 /* Otros estilos */
@@ -122,15 +134,6 @@ footer .link-info {
 
 /* Estilos para botones fijos */
 .btn-fixed {
-    width: 80px; /* Ajusta el tamaño según lo necesario */
-    height: 30px; /* Ajusta la altura según lo necesario */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Asegura que los botones tengan el mismo tamaño y un pequeño espacio entre ellos */
-.btn-fixed {
     min-width: 100px;
     max-width: 100px;
     text-align: center;
@@ -139,7 +142,7 @@ footer .link-info {
 
 /* Asegura que cada columna esté alineada y ocupen una sola línea */
 .table td, .table th {
-    white-space: nowrap; /* Evita el salto de línea en las celdas y en los títulos */
+    white-space: nowrap; /* Evita el salto de línea */
     overflow: hidden; /* Evita que el contenido desborde */
     text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
     vertical-align: middle; /* Alinea el contenido verticalmente */
@@ -150,15 +153,9 @@ footer .link-info {
     padding: 0 5px; /* Espacio entre columnas */
 }
 
-/* Flex con espaciado entre botones */
-.d-flex .col {
-    flex: 1;
-    padding: 0 5px; /* Pequeño espacio entre botones */
-}
-
 /* Añadir padding a la fila de títulos para que tengan algo de espacio */
 .table thead th {
-    padding: 10px 5px; /* Espacio interno (padding) para los títulos */
+    padding: 10px 5px; /* Espacio interno para los títulos */
     text-align: center; /* Alineación central de los títulos */
 }
 
@@ -174,7 +171,9 @@ footer .link-info {
     max-width: 90%; /* Limita el ancho máximo al 90% del ancho de la pantalla */
     font-size: 0.9rem; /* Tamaño de texto ajustado para tablas */
 }
-
+.highlight {
+    background-color: #ffcc00; /* Color de fondo amarillo (puedes cambiarlo según tus preferencias) */
+}
 /* Media query para pantallas de resolución mediana */
 @media (min-width: 1280px) and (max-width: 1600px) {
     .container {
@@ -182,6 +181,6 @@ footer .link-info {
     }
 
     .card-title {
-        font-size: 1.1rem; /* Ajustar el tamaño del título de las tarjetas */
+        font-size: 1.2rem; /* Ajustar el tamaño del título de las tarjetas */
     }
 }

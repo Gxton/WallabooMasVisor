@@ -33,8 +33,8 @@
                     <div class="col-md-4">
                         <label asp-for="FechaDesde" class="form-label"></label>
                     </div>
-                    <div class="col-md-4">
-                        <input asp-for="FechaDesde" class="form-control" />
+                    <div class="col-md-8">
+                        <input asp-for="FechaDesde" class="form-control" type="datetime-local" id="FechaDesde" />
                         <span asp-validation-for="FechaDesde" class="text-danger"></span>
                     </div>
                 </div>
@@ -43,8 +43,8 @@
                     <div class="col-md-4">
                         <label asp-for="FechaHasta" class="form-label"></label>
                     </div>
-                    <div class="col-md-4">
-                        <input asp-for="FechaHasta" class="form-control" />
+                    <div class="col-md-8">
+                        <input asp-for="FechaHasta" class="form-control" type="datetime-local" id="FechaHasta" />
                         <span asp-validation-for="FechaHasta" class="text-danger"></span>
                     </div>
                 </div>
@@ -83,6 +83,8 @@
                                 var relativePath = Url.Content($"~/uploads/{imagen.TenantId}/{fileName}");
                                 <div>
                                     <img src="@relativePath" alt="Imagen del anuncio" style="width: 150px; height: 150px;" />
+                                    <!-- Agregar un campo oculto para almacenar la ruta de la imagen actual -->
+                                    <input type="hidden" name="ImagenActual" value="@imagen.Image1Path" />
                                 </div>
                             }
                         }
@@ -100,7 +102,6 @@
                     </div>
                     <div class="col-md-8">
                         <input type="file" id="Imagenes" name="Imagenes" class="form-control" accept="image/*" multiple />
-                        @* <small class="form-text text-muted">Puedes subir múltiples imágenes.</small> *@
                     </div>
                 </div>
 
@@ -115,11 +116,11 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6 text-center">
-                        <input type="submit" value="Guardar" class="btn btn-success" />
+                    <div class="col-md-4 text-center">
+                        <input type="submit" value="Guardar" class="btn btn-success w-100 btn-fixed" />
                     </div>
-                    <div class="col-md-6 text-center">
-                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    <div class="col-md-4 text-center">
+                        <a asp-action="Index" class="btn btn-primary w-100 btn-fixed">Cancelar</a>
                     </div>
                 </div>
             </form>
@@ -136,24 +137,36 @@ else
 @section Scripts {
     @Html.RenderPartialAsync("_ValidationScriptsPartial");
     <script>
-        // Función para mostrar la vista previa de la imagen seleccionada
-        document.getElementById("Imagenes").addEventListener("change", function (event) {
-            const previewContainer = document.getElementById("preview-container");
-            previewContainer.innerHTML = ""; // Limpiar contenido anterior
+        // Obtener la fecha y hora actual del servidor en formato YYYY-MM-DDTHH:MM
+        const now = new Date('@ViewBag.CurrentDateTime.ToString("yyyy-MM-ddTHH:mm")'); // Formato requerido para datetime-local
 
-            const files = event.target.files; // Obtener archivos seleccionados
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
+        // Asignar la fecha y hora mínima a los inputs de datetime-local
+        document.getElementById('FechaDesde').setAttribute('min', now.toISOString().slice(0, 16));
+        document.getElementById('FechaHasta').setAttribute('min', now.toISOString().slice(0, 16));
+
+        // Validar que la fecha y hora de finalización no sea anterior a la de inicio
+        document.getElementById('FechaDesde').addEventListener('change', function () {
+            document.getElementById('FechaHasta').setAttribute('min', this.value);
+        });
+
+        // Vista previa de la nueva imagen
+        document.getElementById('Imagenes').addEventListener('change', function (event) {
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = ''; // Limpiar cualquier contenido anterior
+
+            Array.from(event.target.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    const img = document.createElement("img");
-                    img.src = e.target.result; // Establecer la fuente de la imagen
-                    img.style.width = "150px"; // Ancho de la imagen
-                    img.style.height = "150px"; // Alto de la imagen
-                    previewContainer.appendChild(img); // Agregar la imagen al contenedor de vista previa
-                };
-                reader.readAsDataURL(file); // Leer la imagen como URL
-            }
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '150px'; // Ancho de la vista previa
+                    img.style.height = '150px'; // Alto de la vista previa
+                    previewContainer.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
         });
     </script>
+}
+
 }

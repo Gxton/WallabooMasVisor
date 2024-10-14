@@ -10,7 +10,7 @@
 
 <div class="card" style="max-width: 400px; margin: auto;">
     <div class="card-body">
-        <form asp-action="Registro" autocomplete="off">
+        <form asp-action="Registro" autocomplete="off" id="registrationForm">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="mb-3">
@@ -48,14 +48,15 @@
                 <input asp-for="DescripcionComercial" class="form-control" placeholder="Descripción" maxlength="150" />
                 <span asp-validation-for="DescripcionComercial" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="HorarioComercial" class="form-label"></label>
                 @Html.TextArea("HorarioComercial", null, new { @class = "form-control", rows = 3 })
-                @* <input asp-for="HorarioComercial" class="form-control" placeholder="Horario" maxlength="50" /> *@
                 <span asp-validation-for="HorarioComercial" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <label asp-for="PaisId" class="form-label"></label>               
+                <label asp-for="PaisId" class="form-label"></label>
                 <select id="Countries" name="_pais" class="form-select form-select-sm">
                     <option value="">Seleccione país</option>
                     @foreach (var pais in Model.ListaPaises)
@@ -82,63 +83,104 @@
                 <span asp-validation-for="CiudadId" class="text-danger"></span>
             </div>
 
+            <!-- Tildes para Términos y Política de Privacidad -->
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="termsCheckbox" disabled />
+                <label class="form-check-label" for="termsCheckbox">
+                    He leído y acepto los <a href="@Url.Action("TC", "Home")" target="_blank" class="termsLink">Términos y Condiciones</a>
+                </label>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="privacyCheckbox" disabled />
+                <label class="form-check-label" for="privacyCheckbox">
+                    He leído y acepto la <a href="@Url.Action("Privacy", "Home")" target="_blank" class="privacyLink">Política de Privacidad</a>
+                </label>
+            </div>
+            <div class="mb-3">
+                <small class="text-muted">
+                    Al marcar las opciones anteriores, usted acepta nuestros Términos y Condiciones y la Política de Privacidad.
+                </small>
+            </div>
+
             <div class="text-center">
-                <button type="submit" class="btn btn-primary">Regístrate</button>
+                <button type="submit" class="btn btn-primary w-100" id="registerButton" disabled>Regístrate</button>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Cuando cambie el país, cargar las provincias
-        $('#Countries').change(function () {
-            var countryId = $(this).val();
-            $.getJSON('@Url.Action("GetStates")', { countryId: countryId }, function (states) {
-                var statesSelect = $('#States');
-                statesSelect.empty();
-                var citiesSelect = $('#Cities');
-                citiesSelect.empty();
-                // Llenar el combo de provincias
-                $.each(states, function (index, state) {
-                    statesSelect.append($('<option/>', {
-                        value: state.value,
-                        text: state.text
-                    }));
-                });
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Habilitar el checkbox de Términos y Condiciones
+            $('.termsLink').click(function () {
+                $('#termsCheckbox').prop('checked', true).prop('disabled', false);
+                toggleRegisterButton();
             });
-        });
 
-        // Cuando cambie la provincia, cargar las ciudades
-        $('#States').change(function () {
-            var stateId = $(this).val();
-            $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
-                var citiesSelect = $('#Cities');
-                citiesSelect.empty();
-                // Llenar el combo de ciudades
-                $.each(cities, function (index, city) {
-                    citiesSelect.append($('<option/>', {
-                        value: city.value,
-                        text: city.text
-                    }));
-                });
+            // Habilitar el checkbox de Política de Privacidad
+            $('.privacyLink').click(function () {
+                $('#privacyCheckbox').prop('checked', true).prop('disabled', false);
+                toggleRegisterButton();
             });
-        });
 
-        // Detectar cuando el combo de provincias obtiene el foco
-        $('#States').focus(function () {
-            var firstStateOption = $('#States option:first').val();
-            if (firstStateOption) {
-                // Si hay una opción seleccionada, forzar el cambio
-                $('#States').val(firstStateOption).trigger('change');
+            // Habilitar el botón de registro solo si ambos checkboxes están seleccionados
+            function toggleRegisterButton() {
+                const termsChecked = $('#termsCheckbox').is(':checked');
+                const privacyChecked = $('#privacyCheckbox').is(':checked');
+                $('#registerButton').prop('disabled', !(termsChecked && privacyChecked));
             }
-        });
-    });
-</script>
 
+            // Controlar el evento de cambio de los checkboxes
+            $('#termsCheckbox, #privacyCheckbox').change(toggleRegisterButton);
+
+            // Cuando cambie el país, cargar las provincias
+            $('#Countries').change(function () {
+                var countryId = $(this).val();
+                $.getJSON('@Url.Action("GetStates")', { countryId: countryId }, function (states) {
+                    var statesSelect = $('#States');
+                    statesSelect.empty();
+                    var citiesSelect = $('#Cities');
+                    citiesSelect.empty();
+                    // Llenar el combo de provincias
+                    $.each(states, function (index, state) {
+                        statesSelect.append($('<option/>', {
+                            value: state.value,
+                            text: state.text
+                        }));
+                    });
+                });
+            });
+
+            // Cuando cambie la provincia, cargar las ciudades
+            $('#States').change(function () {
+                var stateId = $(this).val();
+                $.getJSON('@Url.Action("GetCities")', { stateId: stateId }, function (cities) {
+                    var citiesSelect = $('#Cities');
+                    citiesSelect.empty();
+                    // Llenar el combo de ciudades
+                    $.each(cities, function (index, city) {
+                        citiesSelect.append($('<option/>', {
+                            value: city.value,
+                            text: city.text
+                        }));
+                    });
+                });
+            });
+
+            // Detectar cuando el combo de provincias obtiene el foco
+            $('#States').focus(function () {
+                var firstStateOption = $('#States option:first').val();
+                if (firstStateOption) {
+                    // Si hay una opción seleccionada, forzar el cambio
+                    $('#States').val(firstStateOption).trigger('change');
+                }
+            });
+        });
+    </script>
 }

@@ -7,8 +7,10 @@
 
 @if (User.Identity is not null && User.Identity.IsAuthenticated)
 {
-    <h2>Listado de Anuncios</h2>
-
+    <div style="display: flex; align-items: center;">
+        <h2 style="margin-right: 10px;">Mis Anuncios</h2>
+        <a asp-action="Create" class="btn btn-primary btn-fixed">Nuevo Anuncio</a>
+    </div>
     <div class="table-container">
         <table class="table table-bordered">
             <thead class="table-light">
@@ -28,7 +30,13 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    // Verificar si queda solo un día para el vencimiento
+                    bool isExpiringSoon = (item.FechaHasta.Date == DateTime.Now.AddDays(1).Date);
+
+                    // Aplicar la clase 'highlight' si está a un día de vencimiento
+                    string rowClass = isExpiringSoon ? "highlight" : "";
+
+                    <tr class="@rowClass">
                         <td style="vertical-align: top;">@Html.DisplayFor(modelItem => item.Descripcion)</td>
                         <td style="vertical-align: top;">@item.FechaDesde.ToString("g")</td>
                         <td style="vertical-align: top;">@item.FechaHasta.ToString("g")</td>
@@ -37,15 +45,22 @@
                         <td style="vertical-align: top;">@(item.Activo == 1 ? "Sí" : "No")</td>
                         <td style="vertical-align: top;">@(item.Pagado == 1 ? "Sí" : "No")</td>
                         <td style="vertical-align: top;">
-                            @foreach (var imagen in item.Imagenes)
-                            {
-                                if (!string.IsNullOrEmpty(imagen.Image1Path))
+                            @{
+                                var imagePath = "~/imagenes/NoFoto.png"; // Ruta de la imagen predeterminada
+                                bool hasImage = false; // Bandera para verificar si hay imagen
+
+                                foreach (var imagen in item.Imagenes)
                                 {
-                                    // Asegurarse de que imagePath contenga solo el nombre del archivo
-                                    var imageUrl = Url.Content($"~/uploads/{item.TenantId}/{System.IO.Path.GetFileName(imagen.Image1Path)}");
-                                    <img src="@imageUrl" alt="Imagen de anuncio" style="width:100px;height:auto;" />
+                                    if (!string.IsNullOrEmpty(imagen.Image1Path))
+                                    {
+                                        // Asegurarse de que imagePath contenga solo el nombre del archivo
+                                        imagePath = Url.Content($"~/uploads/{item.TenantId}/{System.IO.Path.GetFileName(imagen.Image1Path)}");
+                                        hasImage = true;
+                                        break; // Salir del bucle si se encuentra una imagen
+                                    }
                                 }
                             }
+                            <img src="@Url.Content(imagePath)" alt="Imagen de anuncio" style="width:100px;height:auto;" />
                         </td>
                         <td style="vertical-align: top;">
                             <div class="d-flex justify-content-between">
@@ -77,17 +92,14 @@
             </tbody>
         </table>
     </div>
-
-    <p>
-        <a asp-action="Create" class="btn btn-primary btn-fixed">Nuevo</a>
-    </p>
 }
 else
 {
     <div class="text-center mb-4">
-        <h1 class="display-4">Bienvenido a Wallaboo</h1>
-        <p class="lead">La herramienta perfecta para negocios y profesionales: publica tus ofertas y permite que tus clientes accedan a ellas fácilmente escaneando un código QR.</p>
+        <h1 class="display-4 font-weight-bold text-center">Wallaboo</h1>
+        <p class="lead mt-3">La solución ideal para negocios y profesionales: publica tus ofertas en un instante y permite a tus clientes acceder a ellas fácilmente a través de un simple escaneo de código QR.</p>
     </div>
+
     <div class="container mt-5">
         <div class="d-flex justify-content-center">
             <div class="card-group">
@@ -97,8 +109,7 @@ else
                             <img src="~/imagenes/Almacen.png" class="card-img-top" alt="Gestión de Ofertas">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Gestiona tus Ofertas</h5>
-                                <p class="card-text">Crea y administra tus ofertas fácilmente para atraer a más clientes.</p>
-                                <a class="btn btn-custom w-100" asp-controller="usuarios" asp-action="login">Ingresar</a>
+                                <p class="card-text">Crea y maneja tus ofertas de forma rápida y efectiva para atraer a más clientes!.</p>
                             </div>
                         </div>
                     </div>
@@ -107,8 +118,7 @@ else
                             <img src="~/imagenes/QrCode.png" class="card-img-top" alt="Generación de Códigos QR">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Genera Códigos QR</h5>
-                                <p class="card-text">Facilita a tus clientes el acceso a todas tus ofertas escaneando un código QR único.</p>
-                                <a class="btn btn-custom w-100" asp-controller="usuarios" asp-action="registro">Registrate!</a>
+                                <p class="card-text">Facilita que tus clientes descubran todas tus ofertas al escanear un único código QR.</p>
                             </div>
                         </div>
                     </div>
@@ -117,8 +127,7 @@ else
                             <img src="~/imagenes/Soporte.png" class="card-img-top" alt="Soporte al Cliente">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Soporte al Cliente</h5>
-                                <p class="card-text">Estamos aquí para ayudarte. Contáctanos si tienes preguntas sobre nuestras funciones.</p>
-                                <a href="~/Support" class="btn btn-custom w-100">Contáctanos</a>
+                                <p class="card-text">Estamos aquí para ayudarte. Contáctanos si tienes preguntas sobre nuestras funciones!.</p>
                             </div>
                         </div>
                     </div>

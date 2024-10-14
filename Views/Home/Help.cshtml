@@ -1,6 +1,94 @@
-﻿@{
-    ViewData["Title"] = "Ayuda";
-}
-<h1>@ViewData["Title"]</h1>
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda para Anunciantes</title>
+    <link rel="stylesheet" href="~/css/site.css"> <!-- Asegúrate de que la ruta al CSS es correcta -->
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="display-4 text-center">Preguntas Frecuentes</h1>
+        <p class="text-center lead">Estamos aquí para ayudarte a aprovechar al máximo nuestros servicios.</p>
 
-<p>Factura cada 24 horas</p>
+        <div class="faq-item mt-4">
+            <h2>¿Cómo me doy de alta en Wallaboo?</h2>
+            <p><strong>Pasos:</strong></p>
+            <ol>
+                <li>Visita la página de inicio de Wallaboo.</li>
+                <li>Haz clic en el botón "Regístrate!".</li>
+                <li>Completa el formulario de registro con tu información:</li>
+                <ul>
+                    <li><strong>Email:</strong> Introduce tu dirección de correo electrónico, por ejemplo, <em>tu-email@ejemplo.com</em>.</li>
+                    <li><strong>Contraseña:</strong> Crea una contraseña segura.</li>
+                    <li><strong>Nombre comercial:</strong> Escribe el nombre de tu negocio.</li>
+                    <li><strong>Teléfono:</strong> Proporciona un número de contacto comercial.</li>
+                    <li><strong>Dirección:</strong> Indica la dirección física de tu negocio.</li>
+                    <li><strong>Descripción:</strong> Escribe una breve descripción de tu negocio.</li>
+                    <li><strong>Horario comercial:</strong> Indica tus horarios de atención al cliente.</li>
+                    <li><strong>Selecciona tu país:</strong> Elige tu país de una lista desplegable.</li>
+                    <li><strong>Selecciona tu provincia:</strong> Elige tu provincia de una lista desplegable que se actualizará según tu selección de país.</li>
+                    <li><strong>Selecciona tu ciudad:</strong> Finalmente, selecciona tu ciudad de otra lista desplegable que se actualizará según tu selección de provincia.</li>
+                </ul>
+                <li>Revisa la información y haz clic en "Regístrate".</li>
+                <li>Verifica tu correo electrónico y sigue las instrucciones para activar tu cuenta.</li>
+            </ol>
+        </div>
+
+        <div class="faq-item mt-4">
+            <h2>¿Cómo genero ofertas?</h2>
+            <p><strong>Pasos:</strong></p>
+            <ol>
+                <li>Inicia sesión en tu cuenta de Wallaboo.</li>
+                <li>Selecciona "Nuevo Anuncio."</li>
+                <li>Añade los artículos o servicios que deseas incluir y establece un único precio para la oferta completa.</li>
+                <li>Haz clic en "Guardar" para publicar tu oferta.</li>
+            </ol>
+        </div>
+
+        <div class="faq-item mt-4">
+            <h2>¿Puedo editar mis ofertas después de haberlas creado?</h2>
+            <p>Si, puedes modificarlas antes de publicarlas, pero no puedes editarlas una vez que están publicadas y dentro del rango de fechas estipulado. Si necesitas hacer cambios después de la publicación y mientras está activa, deberás eliminar la oferta y crear una nueva.</p>
+        </div>
+
+        <div class="faq-item mt-4">
+            <h2>¿Cómo puedo eliminar una oferta?</h2>
+            <p><strong>Pasos:</strong></p>
+            <ol>
+                <li>Puedes eliminar una oferta siempre que esté vencida o no activa, o si el periodo de tiempo por el cual estará la oferta ha finalizado.</li>
+                <li>Los anuncios vencidos se eliminarán automáticamente después de 15 días de no ser vueltos a habilitar o reactivados.</li>
+                <li>Ve a tu panel de control, selecciona la oferta y elige la opción de "Eliminar".</li>
+            </ol>
+        </div>
+
+        <div class="faq-item mt-4">
+            <h2>¿Qué hago si tengo problemas con mi cuenta?</h2>
+            <p><strong>Pasos:</strong></p>
+            <ol>
+                <li>Revisa las preguntas frecuentes para ver si tu problema está listado.</li>
+                <li>Si no encuentras una solución, dirígete a la sección de contacto.</li>
+                <li>Completa el formulario de contacto o envía un correo a soporte@wallaboo.com.ar con una descripción detallada del problema.</li>
+                <li>Incluye tu información de contacto y número de cuenta para una respuesta más rápida.</li>
+            </ol>
+        </div>
+
+        <div class="faq-item mt-4">
+            <h2>¿Cómo funciona el sistema de pagos?</h2>
+            <p><strong>Pasos:</strong></p>
+            <ol>
+                <li>Cuando creas un anuncio, verás el botón "Pagar" correspondiente.</li>
+                <li>Al hacer clic en "Pagar", serás llevado a una página donde podrás ingresar los datos de pago de Mercado Pago.</li>
+                <li>Ingresa la información requerida y verifica el monto a pagar.</li>
+                <li>Confirma la transacción. Recibirás un correo de confirmación una vez que el pago haya sido procesado.</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <footer class="footer mt-5">
+        <div>
+            <p>&copy; 2024 Wallaboo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

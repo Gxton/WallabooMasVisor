@@ -31,18 +31,17 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                 </div>
 
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Registro")'">Crear una nueva cuenta</button>
+                    <button type="button" class="btn btn-secondary w-100" onclick="location.href='@Url.Action("Registro")'">Crear una nueva cuenta</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
