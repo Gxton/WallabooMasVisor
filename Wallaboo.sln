@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución",
 		tareas.txt = tareas.txt
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WallabooVisor", "..\WallabooVisor\WallabooVisor\WallabooVisor.csproj", "{53584DFD-CAB1-473D-858B-F8919AA84D3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{D19AAE3D-1605-49E8-AB93-DEBA9EA14235}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D19AAE3D-1605-49E8-AB93-DEBA9EA14235}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D19AAE3D-1605-49E8-AB93-DEBA9EA14235}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53584DFD-CAB1-473D-858B-F8919AA84D3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53584DFD-CAB1-473D-858B-F8919AA84D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53584DFD-CAB1-473D-858B-F8919AA84D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53584DFD-CAB1-473D-858B-F8919AA84D3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
